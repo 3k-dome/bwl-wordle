@@ -3,7 +3,7 @@ Wordle but with business related terms. University project 2022.
 
 ## game concept
 1. not a typical clone but game logic remains the same
-2. exdpanded by addtional settings which change difficulty
+2. expanded by addtional settings which change difficulty
 3. random word length between x and y letters chosen each day
 4. daily and global scoreboard
     1. fair and dynamic scoring symstem
