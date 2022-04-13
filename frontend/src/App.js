@@ -1,10 +1,19 @@
+import {Component} from "react";
+import Raster from "./Raster";
+import Keyboard from "./Keyboard";
+import Header from "./Header";
 
-function App() {
-  return (
-      <div>
-        BWL-Wordle
-      </div>
-  );
+class App extends Component {
+    render() {
+        return (
+            <>
+                <Header/>
+                <Raster/>
+                <Keyboard/>
+                </>
+
+        );
+    }
 }
 
 export default App;
