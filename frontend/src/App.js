@@ -1,4 +1,4 @@
-import {Component} from "react";
+import React, {Component} from "react";
 import Raster from "./Raster";
 import Keyboard from "./Keyboard";
 import Header from "./Header";

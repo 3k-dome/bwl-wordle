@@ -74,4 +74,9 @@ body {
     background-color: rgb(129,131,132);
     border-radius: 3px;
     font-size: 1.4em;
+    user-select: none;
+}
+
+.key:hover {
+    background-color: rgb(74, 75, 75);
 }

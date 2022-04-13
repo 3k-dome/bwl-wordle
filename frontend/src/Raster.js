@@ -1,4 +1,4 @@
-import {Component} from "react";
+import React, {Component} from "react";
 import Square from "./Square";
 
 class Raster extends Component {
