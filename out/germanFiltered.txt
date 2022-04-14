@@ -313,7 +313,6 @@ axiom
 axiome
 azalee
 azetat
-b-dur
 basf
 basic
 basik
@@ -664,10 +663,8 @@ butler
 butter
 bypass
 byte
-c-dur
 cmos
 cobol
-cp/m
 cabrio
 cadiz
 caen
@@ -766,8 +763,6 @@ crom
 cruz
 curie
 cypern
-d-mark
-d-zug
 dnvp
 dabei
 dachau
@@ -1728,7 +1723,6 @@ hauses
 hausse
 haut
 hawai
-he-man
 hebels
 heber
 hebung
@@ -1895,7 +1889,6 @@ hymne
 hymnen
 iara
 iata
-ibm-pc
 isbn
 iberer
 ideals
@@ -2118,7 +2111,6 @@ kanne
 kannen
 kanon
 kansas
-kant's
 kante
 kanton
 kaotin
@@ -2643,12 +2635,10 @@ lydien
 lynch
 lyrik
 mbyte
-md-dos
 mips
 miti
 modula
 mpla
-ms-dos
 msdos
 mwst
 maar
@@ -4452,8 +4442,6 @@ typen
 typens
 typus
 tyrann
-u-bahn
-u-boot
 unesco
 unita
 ustg
@@ -5352,7 +5340,6 @@ buntem
 bunten
 buntes
 busste
-c-moll
 capita
 carte
 cetera
@@ -5959,7 +5946,6 @@ gehn
 geholt
 gehst
 geht
-geht's
 gehupt
 geil
 geile
@@ -6159,7 +6145,6 @@ hasste
 hast
 haste
 hastet
-hat's
 hatten
 hattet
 hauche
@@ -6526,7 +6511,6 @@ kluge
 klugem
 kluger
 kluges
-km/h
 knacke
 knackt
 knapp
@@ -7413,7 +7397,6 @@ saeugt
 saeume
 saeumt
 saftig
-sag's
 sagen
 sagend
 sagt
@@ -7602,7 +7585,6 @@ solche
 solid
 solide
 soll
-soll's
 sollen
 solls
 sollst
@@ -7935,7 +7917,6 @@ turnst
 turnt
 tusche
 tuscht
-tut's
 tute
 tuten
 tutest
@@ -8230,7 +8211,6 @@ winzig
 wippen
 wippst
 wippt
-wir's
 wirbst
 wird
 wirfst
@@ -10343,7 +10323,6 @@ kuss
 kussel
 kuti
 kutsch
-lca's
 lcas
 leds
 loba
@@ -10645,7 +10624,6 @@ oszi
 otmar
 ouput
 ozeane
-pc's
 pcbs
 paar
 paare
@@ -12188,7 +12166,6 @@ mono
 mrad
 mrcnum
 msec
-msec's
 muede
 muesst
 muesse
