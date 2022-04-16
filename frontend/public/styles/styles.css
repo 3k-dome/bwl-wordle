@@ -1,4 +1,3 @@
-
 * {
     box-sizing: border-box;
     font-family: 'Oswald', sans-serif;
@@ -20,10 +19,6 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-}
-
-.content {
-
 }
 
 .header {

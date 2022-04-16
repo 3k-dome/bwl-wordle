@@ -1,8 +1,7 @@
-import React, {Component} from "react";
+import React from "react";
 import Key from "./Key";
 
-class Keyboard extends Component {
-    render() {
+const Keyboard = () => {
         return (
             <div className={"keyboard"}>
                 <div className="keyboard-row">
@@ -44,7 +43,6 @@ class Keyboard extends Component {
                 </div>
             </div>
         );
-    }
 }
 
 export default Keyboard

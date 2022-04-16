@@ -1,13 +1,11 @@
-import React, {Component} from "react";
+import React from "react";
 
-class Header extends Component {
-    render() {
+const Header = () => {
         return (
             <div className={"header"}>
                 <h2>BWL-WORDLE</h2>
             </div>
         )
-    }
 }
 
 export default Header

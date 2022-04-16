@@ -1,11 +1,9 @@
-import React, {Component} from "react";
+import React from "react";
 
-class Key extends Component {
-    render() {
+const Key = (props) => {
         return (
-            <div className={"key"}>{this.props.letter}</div>
+            <div className={"key"}>{props.letter}</div>
         );
-    }
 }
 
 export default Key

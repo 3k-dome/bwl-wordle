@@ -1,10 +1,9 @@
-import React, {Component} from "react";
+import React from "react";
 import Raster from "./Raster";
 import Keyboard from "./Keyboard";
 import Header from "./Header";
 
-class App extends Component {
-    render() {
+const App = () =>{
         return (
             <>
                 <Header/>
@@ -13,7 +12,6 @@ class App extends Component {
                 </>
 
         );
-    }
 }
 
 export default App;

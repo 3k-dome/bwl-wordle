@@ -1,8 +1,7 @@
-import React, {Component} from "react";
+import React from "react";
 import Square from "./Square";
 
-class Raster extends Component {
-    render() {
+const Raster = () => {
         return(
             <div className={"raster"}>
                 <div className="raster-row">
@@ -50,7 +49,6 @@ class Raster extends Component {
 
             </div>
         )
-    }
 }
 
 export default Raster
