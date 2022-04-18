@@ -1,13 +1,22 @@
 import React from "react";
-import Raster from "./Raster";
-import Keyboard from "./Keyboard";
-import Header from "./Header";
+import Board from "./components/Board";
+import Keyboard from "./components/Keyboard";
+import Header from "./components/Header";
 
 const App = () =>{
+
+        const defaultBoard = [
+            [{letter:"", color:"gray"},{letter:"", color:"gray"},{letter:"", color:"gray"},{letter:"", color:"gray"},{letter:"", color:"gray"}],
+            [{letter:"", color:"gray"},{letter:"", color:"gray"},{letter:"", color:"gray"},{letter:"", color:"gray"},{letter:"", color:"gray"}],
+            [{letter:"", color:"gray"},{letter:"", color:"gray"},{letter:"", color:"gray"},{letter:"", color:"gray"},{letter:"", color:"gray"}],
+            [{letter:"", color:"gray"},{letter:"", color:"gray"},{letter:"", color:"gray"},{letter:"", color:"gray"},{letter:"", color:"gray"}],
+            [{letter:"", color:"gray"},{letter:"", color:"gray"},{letter:"", color:"gray"},{letter:"", color:"gray"},{letter:"", color:"gray"}],
+            [{letter:"", color:"gray"},{letter:"", color:"gray"},{letter:"", color:"gray"},{letter:"", color:"gray"},{letter:"", color:"gray"}]
+            ]
         return (
             <>
                 <Header/>
-                <Raster/>
+                <Board board={defaultBoard}/>
                 <Keyboard/>
                 </>
 
