@@ -1,12 +1,13 @@
 import argparse
+import gzip
+import json
 import pathlib
 import random
 import string
 from functools import partial
 from time import sleep
 from typing import Callable, List, Optional
-import pickle
-import gzip
+
 import requests
 from bs4 import BeautifulSoup
 
@@ -64,12 +65,19 @@ def filter_by_punctuation(word_list: List[str]) -> List[str]:
     return [*filter(punctuation_filter, word_list)]
 
 
+def filter_by_spaces(word_list: List[str]) -> List[str]:
+    def spaces_filter(word: str) -> bool:
+        return False if word.__contains__(" ") else True
+
+    return [*filter(spaces_filter, word_list)]
+
+
 def replace_sondezeichen(word_list: List[str]) -> None:
     for i, word in enumerate(word_list):
         word = word.replace("ß", "ss")
-        word = word.replace("ü", "ue")
-        word = word.replace("ö", "oe")
-        word = word.replace("ä", "ae")
+        word = word.replace("ue", "ü")
+        word = word.replace("oe", "ö")
+        word = word.replace("ae", "ä")
         word_list[i] = word
 
 
@@ -91,8 +99,9 @@ def get_with_cache(filepath: str, *, generator: Callable[..., List[str]]) -> Lis
 
 
 def export(word_list: List[str], filename: str) -> None:
-    with gzip.open(f"./backend/assets/{filename}", mode="wb") as output:
-        pickle.dump(set(word_list), output)  # type: ignore
+    with gzip.open(f"./out/{filename}", mode="wt", encoding="utf_8") as output:
+        word_list.sort()
+        json.dump(word_list, output, indent=4)  # type: ignore
 
 
 if __name__ == "__main__":
@@ -105,13 +114,13 @@ if __name__ == "__main__":
     replace_sondezeichen(word_list)
     word_list = filter_by_length(word_list, min=args.min, max=args.max)
     word_list = filter_by_punctuation(word_list)
-    write_word_list("./out/germanFiltered.txt", word_list)
-    export(word_list, "german.SetStr.pickle.gz")
+    word_list = filter_by_spaces(word_list)
+    export(word_list, "german.ListStr.json.gz")
 
     word_list = get_with_cache("./out/businessAll.txt", generator=get_all_business_words)
     replace_sondezeichen(word_list)
     word_list = filter_by_length(word_list, min=args.min, max=args.max)
     word_list = filter_by_punctuation(word_list)
-    write_word_list("./out/businessFiltered.txt", word_list)
-    export(word_list, "business_unused.SetStr.pickle.gz")
-    export([], "business_used.SetStr.pickle.gz")
+    word_list = filter_by_spaces(word_list)
+    export(word_list, "business_unused.ListStr.json.gz")
+    export([], "business_used.ListStr.json.gz")
