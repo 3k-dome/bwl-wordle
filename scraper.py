@@ -5,7 +5,8 @@ import string
 from functools import partial
 from time import sleep
 from typing import Callable, List, Optional
-
+import pickle
+import gzip
 import requests
 from bs4 import BeautifulSoup
 
@@ -89,6 +90,11 @@ def get_with_cache(filepath: str, *, generator: Callable[..., List[str]]) -> Lis
     return word_list
 
 
+def export(word_list: List[str], filename: str) -> None:
+    with gzip.open(f"./backend/assets/{filename}", mode="wb") as output:
+        pickle.dump(set(word_list), output)  # type: ignore
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--min", type=int, required=True, help="min. wordlength as integer.")
@@ -100,9 +106,12 @@ if __name__ == "__main__":
     word_list = filter_by_length(word_list, min=args.min, max=args.max)
     word_list = filter_by_punctuation(word_list)
     write_word_list("./out/germanFiltered.txt", word_list)
+    export(word_list, "german.SetStr.pickle.gz")
 
     word_list = get_with_cache("./out/businessAll.txt", generator=get_all_business_words)
     replace_sondezeichen(word_list)
     word_list = filter_by_length(word_list, min=args.min, max=args.max)
     word_list = filter_by_punctuation(word_list)
     write_word_list("./out/businessFiltered.txt", word_list)
+    export(word_list, "business_unused.SetStr.pickle.gz")
+    export([], "business_used.SetStr.pickle.gz")
