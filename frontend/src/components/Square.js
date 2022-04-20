@@ -1,8 +1,9 @@
 import React from "react";
 
-const Square = ({letter}) => {
+const Square = ({letter, active}) => {
+
         return (
-            <p className={"square"}>{letter}</p>
+            <div className={"square"} id={active}>{letter}</div>
         )
 }
 

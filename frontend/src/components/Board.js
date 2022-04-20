@@ -1,8 +1,9 @@
-import React from "react";
+import React, {useContext} from "react";
 import Square from "./Square";
-import square from "./Square";
+import {AppContext} from "../App";
 
-const Board = ({board}) => {
+const Board = () => {
+    const {board} = useContext(AppContext)
         return(
             <div className={"raster"}>
                 {board.map((row, index) => {
@@ -10,7 +11,7 @@ const Board = ({board}) => {
                 <div className="raster-row" key={index}>
                 {row.map((square, index) => {
                            return(
-                            <Square letter={square.letter} key={index}/>
+                            <Square letter={square.letter} key={index} active={String(square.active)}/>
                            )
                       })}
                     </div>

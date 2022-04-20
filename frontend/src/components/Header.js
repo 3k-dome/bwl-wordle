@@ -3,7 +3,7 @@ import React from "react";
 const Header = () => {
         return (
             <div className={"header"}>
-                <h2>BWL-WORDLE</h2>
+                <h2>BWORDLE</h2>
             </div>
         )
 }

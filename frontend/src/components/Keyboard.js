@@ -1,9 +1,14 @@
-import React from "react";
+import React, {useContext} from "react";
 import Key from "./Key";
+import {AppContext} from "../App";
 
 const Keyboard = () => {
+
+    const {handleKeyboard, delLetter, submitTry} = useContext(AppContext)
+
+
         return (
-            <div className={"keyboard"}>
+            <div className={"keyboard"} onKeyDown={handleKeyboard}>
                 <div className="keyboard-row">
                     <Key letter={"Q"}/>
                     <Key letter={"W"}/>
@@ -15,7 +20,6 @@ const Keyboard = () => {
                     <Key letter={"I"}/>
                     <Key letter={"O"}/>
                     <Key letter={"P"}/>
-                    <Key letter={"Ü"}/>
                 </div>
                 <div className="keyboard-row">
                     <Key letter={"A"}/>
@@ -27,11 +31,9 @@ const Keyboard = () => {
                     <Key letter={"J"}/>
                     <Key letter={"K"}/>
                     <Key letter={"L"}/>
-                    <Key letter={"Ö"}/>
-                    <Key letter={"Ä"}/>
                 </div>
                 <div className="keyboard-row">
-                    <Key letter={"DEL"}/>
+                    <div className={"key"} onClick={delLetter}>DEL</div>
                     <Key letter={"Y"}/>
                     <Key letter={"X"}/>
                     <Key letter={"C"}/>
@@ -39,7 +41,7 @@ const Keyboard = () => {
                     <Key letter={"B"}/>
                     <Key letter={"N"}/>
                     <Key letter={"M"}/>
-                    <Key letter={"ENTER"}/>
+                    <div className={"key"} onClick={submitTry}>ENTER</div>
                 </div>
             </div>
         );
