@@ -25,3 +25,15 @@ Wordle but with business related terms. University project 2022.
 1. developed in JavaScript/ ReactJS
 2. captures user input and transfers it to backend
 3. displays game and communication with client
+
+
+## install
+
+### backend
+
+in project root (backend, frontend, readme, ...) open cmd.
+```
+python -m venv venv
+./venv/Scripts/Activate.ps1
+python -m pip install -r requirements.txt
+```
