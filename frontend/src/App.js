@@ -26,17 +26,21 @@ const App = () =>{
     const currBoard = [...board]
     const currPosition = position
     const currAttempt = attempt
-
+    
+    const noEntries = currBoard[0].length
+    const noAttempts = currBoard.length
+    
     const selectLetter = (letter) => {
-        if (currPosition <= 4) {
+        if (currPosition < noEntries) {
             currBoard[currAttempt][currPosition].letter = letter
-            currBoard[currAttempt][currPosition].active = false
-            if (currPosition <= 3) {
-                currBoard[currAttempt][currPosition + 1].active = true
-            }
-            setPosition(currPosition + 1)
-            setBoard(currBoard)
-
+                currBoard[currAttempt][currPosition].active = false
+                if (currPosition < noEntries - 1) {
+                    currBoard[currAttempt][currPosition + 1].active = true
+                } else {
+                    currBoard[currAttempt][currPosition].active = true
+                }
+                setPosition(currPosition + 1)
+                setBoard(currBoard)
         }
     }
 
@@ -46,9 +50,9 @@ const App = () =>{
 
     const delLetter = () => {
         if (currPosition >= 1) {
-            currBoard[currAttempt][currPosition-1].letter = ""
+            currBoard[currAttempt][currPosition - 1].letter = ""
             currBoard[currAttempt][currPosition - 1].active = true
-            if (currPosition <= 4) {
+            if (currPosition < noEntries) {
                 currBoard[currAttempt][currPosition].active = false
             }
             setPosition(currPosition - 1)
@@ -57,8 +61,9 @@ const App = () =>{
     }
 
     const submitTry = () => {
-        if(currPosition === 5){
+        if(currPosition === noEntries){
             console.log(currBoard[0])
+            currBoard[currAttempt][noEntries - 1].active = false
             currBoard[currAttempt + 1][0].active = true
             setAttempt(currAttempt + 1)
 
