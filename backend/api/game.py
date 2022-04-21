@@ -1,5 +1,4 @@
 from dataclasses import asdict
-from glob import glob
 from pathlib import Path
 
 from components.gamelogic.wordl import Wordl
