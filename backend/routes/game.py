@@ -5,7 +5,7 @@ from components.gamelogic.wordl import Wordl
 from flask import Blueprint, request
 
 wordl = Wordl(Path("./backend/assets"))
-game_api_router = Blueprint("Game", __name__, url_prefix="/game")
+game_api_router = Blueprint("API-Game", __name__, url_prefix="/game")
 
 
 @game_api_router.route("/new_game", methods=["GET"])
@@ -25,12 +25,12 @@ def validate_input():
 game_debug_router = Blueprint("Debug-Game", __name__, url_prefix="/game")
 
 
-@game_debug_router.route("/new_game", methods=["GET"])
+@game_debug_router.route("/get_word", methods=["GET"])
 def get_word():
-    return asdict(wordl._word_cache), 200
+    return wordl._word_cache._word, 200
 
 
-@game_debug_router.route("/new_game", methods=["GET"])
+@game_debug_router.route("/set_word", methods=["GET"])
 def set_word():
     wordl._select_word()
     return "😊", 200
