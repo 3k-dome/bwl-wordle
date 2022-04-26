@@ -8,14 +8,35 @@ export const AppContext = createContext();
 
 const App = () =>{
 
-    const defaultBoard = [
-            [{letter:"", color:"gray", active: true},{letter:"", color:"gray", active: false},{letter:"", color:"gray", active: false},{letter:"", color:"gray", active: false},{letter:"", color:"gray", active: false}],
-            [{letter:"", color:"gray", active: false},{letter:"", color:"gray", active: false},{letter:"", color:"gray", active: false},{letter:"", color:"gray", active: false},{letter:"", color:"gray" , active: false}],
-            [{letter:"", color:"gray", active: false},{letter:"", color:"gray", active: false},{letter:"", color:"gray", active: false},{letter:"", color:"gray", active: false},{letter:"", color:"gray" , active: false}],
-            [{letter:"", color:"gray", active: false},{letter:"", color:"gray", active: false},{letter:"", color:"gray", active: false},{letter:"", color:"gray", active: false},{letter:"", color:"gray" , active: false}],
-            [{letter:"", color:"gray", active: false},{letter:"", color:"gray", active: false},{letter:"", color:"gray", active: false},{letter:"", color:"gray", active: false},{letter:"", color:"gray" , active: false}],
-            [{letter:"", color:"gray", active: false},{letter:"", color:"gray", active: false},{letter:"", color:"gray", active: false},{letter:"", color:"gray", active: false},{letter:"", color:"gray" , active: false}],
-            ]
+    async function getWordLength() {
+        const response = await fetch('http://localhost:8000/api/game/new_game')
+        const wordLength = await response.json()
+
+        return wordLength.length
+    }
+
+    async function createGame() {
+        const boardSize = [6, await getWordLength()]
+        const tempBoard = []
+
+        for (let i=0; i <= boardSize[0] - 1; i++) {
+            tempBoard.push([])
+            for (let v=0; v <= boardSize[1]; v++) {
+                tempBoard[i][v] = {letter: "", color: "gray", active: false}
+            }
+        }
+
+        console.log(tempBoard)
+
+        return tempBoard
+    }
+
+    async function defaultBoard() {
+        return await createGame()
+    }
+
+
+
 
     const [board, setBoard] = useState(defaultBoard)
 
@@ -56,9 +77,11 @@ const App = () =>{
         }
     }
 
+
     const submitTry = () => {
         if(currPosition === 5){
             console.log(currBoard[0])
+            getWordLength()
             currBoard[currAttempt + 1][0].active = true
             setAttempt(currAttempt + 1)
 
