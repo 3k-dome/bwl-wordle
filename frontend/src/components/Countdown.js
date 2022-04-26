@@ -12,7 +12,7 @@ function Countdown() {
         }, 1000);
     }, []);
 
-    return <div>{clockState}</div>;
+    return <div className={"countdown"}>Time till next Word <br/>{clockState}</div>;
 }
 
 export default Countdown;

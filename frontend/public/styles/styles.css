@@ -2,6 +2,7 @@
     box-sizing: border-box;
     font-family: 'Oswald', sans-serif;
     color: white;
+    user-select: none;
 }
 
 html {
@@ -72,7 +73,6 @@ body {
     background-color: rgb(129,131,132);
     border-radius: 3px;
     font-size: 1.4em;
-    user-select: none;
 }
 
 .key:hover {
@@ -81,4 +81,22 @@ body {
 
 #true {
     box-shadow: 0 0 10px rgb(74, 75, 75);
+}
+
+.difficulty-container {
+    display: flex;
+}
+
+.difficulty {
+    border: 1px solid rgb(58,58,60);
+    padding: 1rem;
+    margin: 0.5rem 0.5rem 5rem 0.5rem;
+}
+
+.difficulty:hover {
+    background-color: rgb(58,58,60) ;
+}
+
+.countdown {
+    text-align: center;
 }
