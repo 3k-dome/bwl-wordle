@@ -1,18 +1,24 @@
-import React, {useContext} from "react";
+import React, {useContext, useEffect, useRef} from "react";
 import Key from "./Key";
 import {AppContext} from "../App";
 
 const Keyboard = () => {
 
-    const {handleKeyboard, delLetter, submitTry} = useContext(AppContext)
+    const {handleKeyboard, delLetter, submitTry, board, attempt, notInitialRender} = useContext(AppContext)
 
+
+        // useEffect(() => {
+        //     if (notInitialRender.current) {
+        //         console.log(board[attempt-1].find(element => element.letter === 'E').color)
+        //     }
+        // }, [attempt])
 
         return (
             <div className={"keyboard"} onKeyDown={handleKeyboard}>
                 <div className="keyboard-row">
-                    <Key letter={"Q"}/>
+                    <Key letter={"Q"} color={""}/>
                     <Key letter={"W"}/>
-                    <Key letter={"E"}/>
+                    <Key letter={"E"} color={''}/>
                     <Key letter={"R"}/>
                     <Key letter={"T"}/>
                     <Key letter={"Z"}/>

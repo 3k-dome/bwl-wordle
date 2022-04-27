@@ -79,8 +79,20 @@ body {
     background-color: rgb(74, 75, 75);
 }
 
-#true {
+.active {
     box-shadow: 0 0 10px rgb(74, 75, 75);
+}
+
+.gray {
+    background-color: rgb(58,58,60);
+}
+
+.green {
+    background-color: #3A7734;
+}
+
+.orange {
+    background-color: orange;
 }
 
 .difficulty-container {
@@ -98,5 +110,16 @@ body {
 }
 
 .countdown {
+    text-align: center;
+}
+
+.gameOver {
+    z-index: 10;
+    height: 50%;
+    width: 50%;
+    margin: 0 auto;
+    background-color:rgb(58,58,60);
+    position: absolute;
+    top: 25%;
     text-align: center;
 }
