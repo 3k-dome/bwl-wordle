@@ -28,6 +28,8 @@ const App = () =>{
 
     const [gameOver, setGameOver] = useState(false)
 
+    const [keyColor, setKeyColor] = useState({})
+
 
 
     useEffect(() => {
@@ -147,6 +149,26 @@ const App = () =>{
         return color
     }
 
+    const colorOverride = (oldKeyColor, colorNow) => {
+        if (oldKeyColor) {
+            if (oldKeyColor === colorNow) {
+                return colorNow
+            } else if (colorNow === 'green') {
+                return colorNow
+            } else if (oldKeyColor === 'green') {
+                return oldKeyColor
+            } else if (oldKeyColor === 'gray') {
+                return colorNow
+            } else if (oldKeyColor === 'orange') {
+                return oldKeyColor
+            }
+        } else {
+            return colorNow
+        }
+
+
+    }
+
     async function submitTry() {
         if(currPosition > length){
 
@@ -165,21 +187,26 @@ const App = () =>{
             if(validInput) {
                 //letter information
                 const letterInformation = await apiResponse.letters
+                const currKeyColor = keyColor
                 let multipleLetter = []
+                let keyColors = {}
                 currBoard[currAttempt].forEach((letter, index) => {
-
 
                     if (letterInformation[index].count <= 1){
                         letter.color = colorMapping(letterInformation[index])
+                        keyColors[letter.letter] = colorOverride(keyColor[letter.letter], letter.color)
                     }else {
                         multipleLetter.push(letter)
                         if(multipleLetter.length === letterInformation[index].count){
                             multipleLetter.forEach(letter => {
                                 letter.color = colorMapping(letterInformation[index])
+                                keyColors[letter.letter] = colorOverride(keyColor[letter.letter], letter.color)
                             })
                         }else {
-                            multipleLetter.forEach(letter => {
+                            multipleLetter.forEach((letter, index) => {
                                 letter.color = colorMapping(letterInformation[index], false)
+                                keyColors[letter.letter] = colorOverride(keyColor[letter.letter], letter.color)
+
                             })
                         }
                     }
@@ -188,6 +215,9 @@ const App = () =>{
                 currBoard[currAttempt + 1][0].active = 'active'
                 setAttempt(currAttempt + 1)
                 notInitialRender.current = true
+                setKeyColor({...keyColor,...keyColors})
+
+
 
                 setPosition(0)
             } else {alert('Choose a valid word')}
@@ -217,7 +247,20 @@ const App = () =>{
             <>
                 <Header/>
                 <Countdown/>
-                <AppContext.Provider value={{board, setBoard, position, setPosition, attempt, setAttempt, selectLetter, handleKeyboard, delLetter, submitTry, difficulty, notInitialRender}}>
+                <AppContext.Provider value={{
+                    board,
+                    setBoard,
+                    position,
+                    setPosition,
+                    attempt,
+                    setAttempt,
+                    selectLetter,
+                    handleKeyboard,
+                    delLetter,
+                    submitTry,
+                    difficulty,
+                    notInitialRender,
+                    keyColor}}>
                     {gameOver ? <GameOver/> : null}
                     <Board/>
                     <Keyboard/>

@@ -1,11 +1,11 @@
 import React, {useContext} from "react";
 import {AppContext} from "../App";
 
-const Key = ({letter,color}) => {
-        const {selectLetter} = useContext(AppContext)
+const Key = ({letter}) => {
+        const {selectLetter,keyColor} = useContext(AppContext)
 
         return (
-            <div className={`key ${color}`} onClick={() => selectLetter(letter)}>{letter}</div>
+            <div className={`key ${keyColor[letter]}`} onClick={() => selectLetter(letter)}>{letter}</div>
         );
 }
 

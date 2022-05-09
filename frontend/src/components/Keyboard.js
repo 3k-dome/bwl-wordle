@@ -7,16 +7,11 @@ const Keyboard = () => {
     const {handleKeyboard, delLetter, submitTry, board, attempt, notInitialRender} = useContext(AppContext)
 
 
-        // useEffect(() => {
-        //     if (notInitialRender.current) {
-        //         console.log(board[attempt-1].find(element => element.letter === 'E').color)
-        //     }
-        // }, [attempt])
 
         return (
             <div className={"keyboard"} onKeyDown={handleKeyboard}>
                 <div className="keyboard-row">
-                    <Key letter={"Q"} color={""}/>
+                    <Key letter={"Q"}/>
                     <Key letter={"W"}/>
                     <Key letter={"E"} color={''}/>
                     <Key letter={"R"}/>

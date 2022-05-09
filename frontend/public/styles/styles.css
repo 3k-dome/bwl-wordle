@@ -76,7 +76,7 @@ body {
 }
 
 .key:hover {
-    background-color: rgb(74, 75, 75);
+    transform: scale(1.1);
 }
 
 .active {
