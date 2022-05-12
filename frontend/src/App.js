@@ -2,7 +2,7 @@ import React, {useState, createContext, useCallback, useEffect, useRef} from "re
 import Board from "./components/Board";
 import Keyboard from "./components/Keyboard";
 import Header from "./components/Header";
-import Countdown from "./components/Countdown";
+
 import DifficultySelection from "./components/DifficultySelection";
 import GameOver from "./components/GameOver";
 
@@ -246,7 +246,6 @@ const App = () =>{
         return (
             <>
                 <Header/>
-                <Countdown/>
                 <AppContext.Provider value={{
                     board,
                     setBoard,
@@ -271,7 +270,6 @@ const App = () =>{
             return (
                 <>
                     <Header/>
-                    <Countdown/>
                     <GameOver/>
                 </>
             )
@@ -279,7 +277,6 @@ const App = () =>{
         return (
             <>
                 <Header/>
-                <Countdown/>
                 <DifficultySelection setDifficulty={setDifficulty}/>
             </>
 

@@ -1,7 +1,14 @@
+:root {
+    --base-bg-color: rgb(18,18,19);
+    --text-color: white;
+    --border-color: rgba(58,58,60, 1);
+    --key-color: rgb(129,131,132,1);
+}
+
 * {
     box-sizing: border-box;
     font-family: 'Oswald', sans-serif;
-    color: white;
+    color: var(--text-color);
     user-select: none;
 }
 
@@ -11,7 +18,7 @@ html {
 
 body {
     height: 100%;
-    background-color: rgb(18,18,19);
+    background-color: var(--base-bg-color);
     margin: 0;
 }
 
@@ -24,10 +31,41 @@ body {
 }
 
 .header {
-    text-align: center;
     border-bottom: 0.05em solid rgb(58,58,60);
-    /*margin-bottom: 7em;*/
     width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.title {
+    font-size: 2rem;
+    width: 30%;
+    text-align: center;
+}
+
+.settings {
+    width: 30%;
+    align-self: center;
+    display: flex;
+    justify-content: center;
+}
+
+.color-theme {
+    height: fit-content;
+    width: fit-content;
+    padding: 0.2rem;
+    border: 1px solid var(--border-color);
+    vertical-align: center;
+    border-radius: 20px;
+
+    display: flex;
+    justify-content: center;
+}
+
+.countdown {
+    text-align: center;
+    align-self: end;
+    width: 30%;
 }
 
 .raster {
@@ -46,7 +84,7 @@ body {
 }
 
 .square {
-    border: 0.1em solid rgb(58,58,60);
+    border: 0.1em solid var(--key-color);
     width: 60px;
     height: 60px;
     padding: 1em;
@@ -54,6 +92,11 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.active {
+    border: 0.15em solid var(--key-color);
+    transform: scale(1.1);
 }
 
 .keyboard {
@@ -70,17 +113,13 @@ body {
 .key {
     margin: 0.2em;
     padding: 0.5em 0.75em;
-    background-color: rgb(129,131,132);
+    background-color: var(--key-color);
     border-radius: 3px;
     font-size: 1.4em;
 }
 
 .key:hover {
     transform: scale(1.1);
-}
-
-.active {
-    box-shadow: 0 0 10px rgb(74, 75, 75);
 }
 
 .gray {
@@ -96,22 +135,21 @@ body {
 }
 
 .difficulty-container {
+    width: 100%;
     display: flex;
+    justify-content: center;
 }
 
 .difficulty {
-    border: 1px solid rgb(58,58,60);
+    border: 1px solid var(--border-color);
     padding: 1rem;
     margin: 0.5rem 0.5rem 5rem 0.5rem;
 }
 
 .difficulty:hover {
-    background-color: rgb(58,58,60) ;
+    background-color: var(--border-color) ;
 }
 
-.countdown {
-    text-align: center;
-}
 
 .gameOver {
     z-index: 10;
