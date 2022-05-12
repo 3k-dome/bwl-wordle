@@ -57,10 +57,13 @@ body {
     border: 1px solid var(--border-color);
     vertical-align: center;
     border-radius: 20px;
-
     display: flex;
     justify-content: center;
 }
+
+.color-theme:hover {
+    background-color: var(--border-color);
+   }
 
 .countdown {
     text-align: center;
