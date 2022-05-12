@@ -1,10 +1,11 @@
-import React, {useContext} from "react";
+import React, {useContext, useEffect, useRef} from "react";
 import Key from "./Key";
 import {AppContext} from "../App";
 
 const Keyboard = () => {
 
-    const {handleKeyboard, delLetter, submitTry} = useContext(AppContext)
+    const {handleKeyboard, delLetter, submitTry, board, attempt, notInitialRender} = useContext(AppContext)
+
 
 
         return (
@@ -12,7 +13,7 @@ const Keyboard = () => {
                 <div className="keyboard-row">
                     <Key letter={"Q"}/>
                     <Key letter={"W"}/>
-                    <Key letter={"E"}/>
+                    <Key letter={"E"} color={''}/>
                     <Key letter={"R"}/>
                     <Key letter={"T"}/>
                     <Key letter={"Z"}/>

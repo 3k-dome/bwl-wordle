@@ -1,38 +1,85 @@
-import React, {useState, createContext, useCallback, useEffect} from "react";
+import React, {useState, createContext, useCallback, useEffect, useRef} from "react";
 import Board from "./components/Board";
 import Keyboard from "./components/Keyboard";
 import Header from "./components/Header";
 import Countdown from "./components/Countdown";
+import DifficultySelection from "./components/DifficultySelection";
+import GameOver from "./components/GameOver";
 
 export const AppContext = createContext();
 
 const App = () =>{
+    //backend server port
+    const port = 'http://localhost:8000'
 
-    const defaultBoard = [
-            [{letter:"", color:"gray", active: true},{letter:"", color:"gray", active: false},{letter:"", color:"gray", active: false},{letter:"", color:"gray", active: false},{letter:"", color:"gray", active: false}],
-            [{letter:"", color:"gray", active: false},{letter:"", color:"gray", active: false},{letter:"", color:"gray", active: false},{letter:"", color:"gray", active: false},{letter:"", color:"gray" , active: false}],
-            [{letter:"", color:"gray", active: false},{letter:"", color:"gray", active: false},{letter:"", color:"gray", active: false},{letter:"", color:"gray", active: false},{letter:"", color:"gray" , active: false}],
-            [{letter:"", color:"gray", active: false},{letter:"", color:"gray", active: false},{letter:"", color:"gray", active: false},{letter:"", color:"gray", active: false},{letter:"", color:"gray" , active: false}],
-            [{letter:"", color:"gray", active: false},{letter:"", color:"gray", active: false},{letter:"", color:"gray", active: false},{letter:"", color:"gray", active: false},{letter:"", color:"gray" , active: false}],
-            [{letter:"", color:"gray", active: false},{letter:"", color:"gray", active: false},{letter:"", color:"gray", active: false},{letter:"", color:"gray", active: false},{letter:"", color:"gray" , active: false}],
-            ]
+    //urls for api calls
+    const worldLengthUrl = `${port}/api/game/new_game`
+    const validateInputUrl = `${port}/api/game/validate_input`
 
-    const [board, setBoard] = useState(defaultBoard)
+    const [board, setBoard] = useState([])
 
     const [position, setPosition] = useState(0)
 
     const [attempt, setAttempt] = useState(0)
 
+    const [length, setLength] = useState(0)
+
+    const [difficulty, setDifficulty] = useState(0)
+
+    const [gameOver, setGameOver] = useState(false)
+
+    const [keyColor, setKeyColor] = useState({})
+
+
+
+    useEffect(() => {
+        async function getWordLength() {
+            const response = await fetch(worldLengthUrl)
+            const wordLength = await response.json()
+
+            setLength(await wordLength.length - 1)
+
+            return wordLength.length
+        }
+
+        getWordLength()
+    },[])
+
+    useEffect(() => {
+         function createGame() {
+            const boardSize = [difficulty, length]
+            const tempBoard = []
+
+            for (let i=0; i <= boardSize[0]; i++) {
+                tempBoard.push([])
+                for (let v=0; v <= boardSize[1]; v++) {
+                    if (v === 0 && i === 0){
+                        tempBoard[i][v] = {letter: '', color: '', active: 'active'}
+                    }else{
+                        tempBoard[i][v] = {letter: '', color: '', active: ''}
+                    }
+                }
+            }
+            setBoard(tempBoard)
+
+            return tempBoard
+        }
+        createGame()
+    }, [difficulty])
+
+
     const currBoard = [...board]
     const currPosition = position
     const currAttempt = attempt
+    const notInitialRender = useRef(false)
+
 
     const selectLetter = (letter) => {
-        if (currPosition <= 4) {
+        if (currPosition <= length) {
             currBoard[currAttempt][currPosition].letter = letter
-            currBoard[currAttempt][currPosition].active = false
-            if (currPosition <= 3) {
-                currBoard[currAttempt][currPosition + 1].active = true
+            currBoard[currAttempt][currPosition].active = ''
+            if (currPosition < length) {
+                currBoard[currAttempt][currPosition + 1].active = 'active'
             }
             setPosition(currPosition + 1)
             setBoard(currBoard)
@@ -47,22 +94,133 @@ const App = () =>{
     const delLetter = () => {
         if (currPosition >= 1) {
             currBoard[currAttempt][currPosition-1].letter = ""
-            currBoard[currAttempt][currPosition - 1].active = true
-            if (currPosition <= 4) {
-                currBoard[currAttempt][currPosition].active = false
+            currBoard[currAttempt][currPosition - 1].active = 'active'
+            if (currPosition <= length) {
+                currBoard[currAttempt][currPosition].active = ''
             }
             setPosition(currPosition - 1)
             setBoard(currBoard)
         }
     }
 
-    const submitTry = () => {
-        if(currPosition === 5){
-            console.log(currBoard[0])
-            currBoard[currAttempt + 1][0].active = true
-            setAttempt(currAttempt + 1)
+    async function validateInput(input) {
+        try {
+            const response = await fetch(validateInputUrl, {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({'input':input})
+            })
+            const inputInformation = await response.json()
 
-            setPosition(0)
+
+
+            return await inputInformation
+        }
+        catch (error) {
+            console.log(error)
+        }
+
+    }
+
+    const createWord = (wordArray) => {
+        let word = ''
+        wordArray.forEach((input) => {
+            word += input.letter
+        })
+
+        return word
+    }
+
+    const colorMapping = (letterInformation, unique = true) => {
+        let color
+        if(!letterInformation.is_in_word){
+            color = 'gray'
+            return color
+        }else if(!letterInformation.is_at_index || !unique) {
+            color = 'orange'
+            return color
+        }
+        if (letterInformation.is_at_index && letterInformation.is_in_word && unique){
+            color = 'green'
+        }
+
+        return color
+    }
+
+    const colorOverride = (oldKeyColor, colorNow) => {
+        if (oldKeyColor) {
+            if (oldKeyColor === colorNow) {
+                return colorNow
+            } else if (colorNow === 'green') {
+                return colorNow
+            } else if (oldKeyColor === 'green') {
+                return oldKeyColor
+            } else if (oldKeyColor === 'gray') {
+                return colorNow
+            } else if (oldKeyColor === 'orange') {
+                return oldKeyColor
+            }
+        } else {
+            return colorNow
+        }
+
+
+    }
+
+    async function submitTry() {
+        if(currPosition > length){
+
+            const apiResponse = await validateInput(createWord(currBoard[currAttempt]))
+            //is input a word?
+            const validInput = await apiResponse.is_valid
+            //is input word of the day
+            const rightWord = await apiResponse.is_word
+
+            if(rightWord) {
+                alert('You got the Word!')
+                setGameOver(true)
+                return
+            }
+
+            if(validInput) {
+                //letter information
+                const letterInformation = await apiResponse.letters
+                const currKeyColor = keyColor
+                let multipleLetter = []
+                let keyColors = {}
+                currBoard[currAttempt].forEach((letter, index) => {
+
+                    if (letterInformation[index].count <= 1){
+                        letter.color = colorMapping(letterInformation[index])
+                        keyColors[letter.letter] = colorOverride(keyColor[letter.letter], letter.color)
+                    }else {
+                        multipleLetter.push(letter)
+                        if(multipleLetter.length === letterInformation[index].count){
+                            multipleLetter.forEach(letter => {
+                                letter.color = colorMapping(letterInformation[index])
+                                keyColors[letter.letter] = colorOverride(keyColor[letter.letter], letter.color)
+                            })
+                        }else {
+                            multipleLetter.forEach((letter, index) => {
+                                letter.color = colorMapping(letterInformation[index], false)
+                                keyColors[letter.letter] = colorOverride(keyColor[letter.letter], letter.color)
+
+                            })
+                        }
+                    }
+                })
+
+                currBoard[currAttempt + 1][0].active = 'active'
+                setAttempt(currAttempt + 1)
+                notInitialRender.current = true
+                setKeyColor({...keyColor,...keyColors})
+
+
+
+                setPosition(0)
+            } else {alert('Choose a valid word')}
         }
     }
 
@@ -83,15 +241,47 @@ const App = () =>{
         }
     },[handleKeyboard])
 
+    if (difficulty){
+        if (!gameOver){
         return (
             <>
+                <Header/>
+                <Countdown/>
+                <AppContext.Provider value={{
+                    board,
+                    setBoard,
+                    position,
+                    setPosition,
+                    attempt,
+                    setAttempt,
+                    selectLetter,
+                    handleKeyboard,
+                    delLetter,
+                    submitTry,
+                    difficulty,
+                    notInitialRender,
+                    keyColor}}>
+                    {gameOver ? <GameOver/> : null}
+                    <Board/>
+                    <Keyboard/>
+                </AppContext.Provider>
+            </>
+        )
+    } else {
+            return (
+                <>
                     <Header/>
                     <Countdown/>
-                    <AppContext.Provider value={{board, setBoard, position, setPosition, attempt, setAttempt, selectLetter, handleKeyboard, delLetter, submitTry}}>
-                        <Board/>
-                        <Keyboard/>
-                    </AppContext.Provider>
+                    <GameOver/>
                 </>
+            )
+        }}
+        return (
+            <>
+                <Header/>
+                <Countdown/>
+                <DifficultySelection setDifficulty={setDifficulty}/>
+            </>
 
         );
 }

@@ -11,7 +11,7 @@ const Board = () => {
                 <div className="raster-row" key={index}>
                 {row.map((square, index) => {
                            return(
-                            <Square letter={square.letter} key={index} active={String(square.active)}/>
+                            <Square letter={square.letter} key={index} active={square.active} color={square.color}/>
                            )
                       })}
                     </div>
