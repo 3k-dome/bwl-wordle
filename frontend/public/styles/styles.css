@@ -34,22 +34,38 @@ body {
     border-bottom: 0.05em solid rgb(58,58,60);
     width: 100%;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-around;
 }
 
 .title {
     font-size: 2rem;
-    width: fit-content;
+    width: 30%;
+    text-align: center;
+}
+
+.settings {
+    width: 30%;
+    align-self: center;
+    display: flex;
+    justify-content: center;
 }
 
 .color-theme {
+    height: fit-content;
+    width: fit-content;
+    padding: 0.2rem;
     border: 1px solid var(--border-color);
-    text-align: center;
+    vertical-align: center;
     border-radius: 20px;
+
+    display: flex;
+    justify-content: center;
 }
 
-.color-theme:after {
-    content: 'color';
+.countdown {
+    text-align: center;
+    align-self: end;
+    width: 30%;
 }
 
 .raster {
@@ -119,7 +135,9 @@ body {
 }
 
 .difficulty-container {
+    width: 100%;
     display: flex;
+    justify-content: center;
 }
 
 .difficulty {
@@ -132,9 +150,6 @@ body {
     background-color: var(--border-color) ;
 }
 
-.countdown {
-    text-align: center;
-}
 
 .gameOver {
     z-index: 10;
