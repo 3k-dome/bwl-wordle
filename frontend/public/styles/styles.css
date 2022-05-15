@@ -1,13 +1,13 @@
 :root {
-    --base-bg-color: rgb(18,18,19);
+    --base-bg-color: rgb(18, 18, 19);
     --text-color: white;
-    --border-color: rgba(58,58,60, 1);
-    --key-color: rgb(129,131,132,1);
+    --border-color: rgba(58, 58, 60, 1);
+    --key-color: rgb(129, 131, 132, 1);
 }
 
 * {
     box-sizing: border-box;
-    font-family: 'Oswald', sans-serif;
+    font-family: monospace;
     color: var(--text-color);
     user-select: none;
 }
@@ -31,7 +31,7 @@ body {
 }
 
 .header {
-    border-bottom: 0.05em solid rgb(58,58,60);
+    border-bottom: 0.05em solid rgb(58, 58, 60);
     width: 100%;
     display: flex;
     justify-content: space-around;
@@ -63,7 +63,7 @@ body {
 
 .settings > *:hover {
     background-color: var(--border-color);
-   }
+}
 
 .countdown {
     text-align: center;
@@ -126,11 +126,11 @@ body {
 }
 
 .gray {
-    background-color: rgb(58,58,60);
+    background-color: rgb(58, 58, 60);
 }
 
 .green {
-    background-color: #3A7734;
+    background-color: #3a7734;
 }
 
 .orange {
@@ -150,17 +150,17 @@ body {
 }
 
 .difficulty:hover {
-    background-color: var(--border-color) ;
+    background-color: var(--border-color);
 }
-
 
 .gameOver {
     z-index: 10;
     height: fit-content;
-    width: 50%;
+    width: fit-content;
     margin: 0 auto;
     background-color: var(--border-color);
     position: absolute;
     top: 25%;
     text-align: center;
+    padding: 1rem;
 }
