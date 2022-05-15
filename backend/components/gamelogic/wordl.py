@@ -9,10 +9,11 @@ from components.gamelogic.interfaces import GameInfo, ValidatedLetter, Validated
 class Wordl:
     def __init__(self, asset_dir: Path) -> None:
         self._asset_dir = asset_dir
-        self._day_created = int(datetime.today().strftime("%d"))
+        self._day_created = None
         self._select_word()
 
     def _select_word(self) -> None:
+        self._day_created = int(datetime.today().strftime("%d"))
         with AssetManager(self._asset_dir) as manager:
             self._word_cache = WordCache(manager.get_random_word())
             self._dictionary = manager.get_dictionary()
