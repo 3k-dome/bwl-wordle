@@ -150,7 +150,6 @@ const App = () => {
 
     //function which returns color in dependency on letter occurrence in todays word
     const colorMapping = (letterInformation, unique = true) => {
-        console.log(letterInformation, unique);
         let color;
         if (!letterInformation.is_in_word) {
             color = "gray";
@@ -231,7 +230,7 @@ const App = () => {
                                 letter.color
                             );
                         } else {
-                            multipleLetter.push(letterInformation[index]);
+                            multipleLetter.push(letter);
                             if (
                                 multipleLetter.length ===
                                 letterInformation[index].count
