@@ -46,7 +46,6 @@ const App = () => {
 
             return wordLength.length;
         }
-
         getWordLength();
     }, []);
 
@@ -150,23 +149,13 @@ const App = () => {
 
     //function which returns color in dependency on letter occurrence in todays word
     const colorMapping = (letterInformation, unique = true) => {
-        let color;
         if (!letterInformation.is_in_word) {
-            color = "gray";
-            return color;
-        } else if (!letterInformation.is_at_index || !unique) {
-            color = "orange";
-            return color;
+            return 'gray';
+        } else if (!letterInformation.is_at_index) {
+            return 'orange';
+        }else {
+            return 'green'
         }
-        if (
-            letterInformation.is_at_index &&
-            letterInformation.is_in_word &&
-            unique
-        ) {
-            color = "green";
-        }
-
-        return color;
     };
 
     //additional function for change of keyboard color after each submit
@@ -217,47 +206,53 @@ const App = () => {
                 }
 
                 if (validInput) {
-                    const currKeyColor = keyColor;
                     let multipleLetter = [];
                     let keyColors = {};
+
                     currBoard[currAttempt].forEach((letter, index) => {
-                        if (letterInformation[index].count <= 1) {
+                        //if (letterInformation[index].count <= 1) {
                             letter.color = colorMapping(
                                 letterInformation[index]
                             );
+                        //console.log(letterInformation[index])
                             keyColors[letter.letter] = colorOverride(
                                 keyColor[letter.letter],
                                 letter.color
                             );
-                        } else {
+                        //} else {
+                            letter.index = index
+                            letter.count = letterInformation[index].count
                             multipleLetter.push(letter);
-                            if (
-                                multipleLetter.length ===
-                                letterInformation[index].count
-                            ) {
-                                multipleLetter.forEach((letter) => {
-                                    letter.color = colorMapping(
-                                        letterInformation[index]
-                                    );
-                                    keyColors[letter.letter] = colorOverride(
-                                        keyColor[letter.letter],
-                                        letter.color
-                                    );
-                                });
-                            } else {
-                                multipleLetter.forEach((letter) => {
-                                    letter.color = colorMapping(
-                                        letterInformation[index],
-                                        false
-                                    );
-                                    keyColors[letter.letter] = colorOverride(
-                                        keyColor[letter.letter],
-                                        letter.color
-                                    );
-                                });
-                            }
-                        }
+                        //}
                     });
+
+                    multipleLetter = multipleLetter.filter(letter => letter.color !== 'gray')
+
+                    const allLetters = multipleLetter.map(letter => {
+                        return letter.letter
+                    })
+
+                    const uniqueLetters = [...new Set(allLetters)]
+
+                    //console.log(uniqueLetters)
+
+                    //console.log(multipleLetter.filter(letter => letter.letter === 'S'))
+
+                    uniqueLetters.forEach(unique => {
+                        const uniqueLetterArray = multipleLetter.filter(letter => letter.letter === unique)
+                        //console.log(uniqueLetterArray)
+                        uniqueLetterArray.sort((a, b) => a.color.localeCompare(b.color));
+                        uniqueLetterArray.forEach((letter, index) => {
+                            if (uniqueLetterArray.length > letter.count) {
+                                if (index <= letter.count -1) {
+                                    letter.color = 'green'
+                                } else {
+                                    letter.color = 'gray'
+                                }
+                            }
+
+                        })
+                    })
 
                     if (currAttempt < difficulty) {
                         currBoard[currAttempt + 1][0].active = "active";

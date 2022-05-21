@@ -38,6 +38,21 @@ const Header = ({gameOver, gameOverModal}) => {
                         {
                             false: '<span class="material-symbols-outlined">light_mode</span>',
                             true: '<span class="material-symbols-outlined">dark_mode</span>'
+                        },
+                    '--square-gray':
+                        {
+                            false: 'rgba(58, 58, 60, 0.55)',
+                            true: 'rgb(58, 58, 60)'
+                        },
+                    '--sqaure-orange':
+                        {
+                            false: 'rgba(255,165,0,0.65)',
+                            true: 'rgb(255,165,0)'
+                        },
+                    '--sqaure-green':
+                        {
+                            false: 'rgba(58,119,53, 0.75)',
+                            true: 'rgb(58,119,53)'
                         }
 
     }

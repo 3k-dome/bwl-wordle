@@ -3,6 +3,9 @@
     --text-color: white;
     --border-color: rgba(58, 58, 60, 1);
     --key-color: rgb(129, 131, 132, 1);
+    --square-gray: rgb(58, 58, 60);
+    --sqaure-orange: rgb(255,165,0);
+    --sqaure-green : rgb(58,119,53)
 }
 
 * {
@@ -98,7 +101,7 @@ body {
 }
 
 .active {
-    border: 0.15em solid var(--key-color);
+    border: 0.2em solid var(--key-color);
     transform: scale(1.1);
 }
 
@@ -126,15 +129,15 @@ body {
 }
 
 .gray {
-    background-color: rgb(58, 58, 60);
+    background-color: var(--square-gray);
 }
 
 .green {
-    background-color: #3a7734;
+    background-color: var(--sqaure-green);
 }
 
 .orange {
-    background-color: orange;
+    background-color: var(--sqaure-orange);
 }
 
 .difficulty-container {
