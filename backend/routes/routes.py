@@ -1,3 +1,4 @@
+from pkgutil import ImpImporter
 from flask import Blueprint
 
 from routes.assets import assets_debug_router
