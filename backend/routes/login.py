@@ -17,12 +17,13 @@ auth_router = Blueprint("Login", __name__, url_prefix="/auth")
 def register_user():
     content: Dict | None = request.json
     if content:
-        with UserDb(Path("./backend/assets")) as user_db:
-            username = content.get("username", None)
-            password = content.get("password", None)
+        username = content.get("username", None)
+        password = content.get("password", None)
+        with UserDb(Path("./backend/assets/user.db")) as user_db:
             status, exception = user_db.add_user(username, password)
         if status:
             return "😊", 200
+        return str(exception), 400
     return "😒", 400
 
 
@@ -32,10 +33,11 @@ def create_token():
     if content:
         username = content.get("username", None)
         password = content.get("password", None)
-        with UserDb(Path("./backend/assets")) as user_db:
-            status = user_db.retrieve_user(username, password)
+        with UserDb(Path("./backend/assets/user.db")) as user_db:
+            status, exception = user_db.retrieve_user(username, password)
         if status:
             return create_access_token(identity=username), 200
+        return str(exception), 400
     return "😒", 400
 
 
