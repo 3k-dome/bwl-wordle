@@ -5,12 +5,14 @@ import React, {
     useEffect,
     useRef,
 } from "react";
+import './styles.scss'
 import Board from "./components/Board";
 import Keyboard from "./components/Keyboard";
 import Header from "./components/Header";
 
 import DifficultySelection from "./components/DifficultySelection";
 import GameOver from "./components/GameOver";
+import Login from "./components/Login";
 
 export const AppContext = createContext();
 
@@ -214,6 +216,7 @@ const App = () => {
                             letter.color = colorMapping(
                                 letterInformation[index]
                             );
+
                         //console.log(letterInformation[index])
                             keyColors[letter.letter] = colorOverride(
                                 keyColor[letter.letter],
@@ -234,7 +237,7 @@ const App = () => {
 
                     const uniqueLetters = [...new Set(allLetters)]
 
-                    //console.log(uniqueLetters)
+                    console.log(uniqueLetters)
 
                     //console.log(multipleLetter.filter(letter => letter.letter === 'S'))
 
@@ -242,10 +245,13 @@ const App = () => {
                         const uniqueLetterArray = multipleLetter.filter(letter => letter.letter === unique)
                         //console.log(uniqueLetterArray)
                         uniqueLetterArray.sort((a, b) => a.color.localeCompare(b.color));
+                        console.log(uniqueLetterArray)
                         uniqueLetterArray.forEach((letter, index) => {
                             if (uniqueLetterArray.length > letter.count) {
                                 if (index <= letter.count -1) {
-                                    letter.color = 'green'
+                                    letter.color = colorMapping(
+                                        letterInformation[letter.index]
+                                    )
                                 } else {
                                     letter.color = 'gray'
                                 }
@@ -273,12 +279,14 @@ const App = () => {
 
     //keyboard events
     const handleKeyboard = useCallback((event) => {
-        if (event.key === "Enter") {
-            submitTry();
-        } else if (event.key === "Backspace") {
-            delLetter();
-        } else if (isLetter(event.key)) {
-            selectLetter(event.key.toUpperCase());
+        if (difficulty) {
+            if (event.key === "Enter") {
+                submitTry();
+            } else if (event.key === "Backspace") {
+                delLetter();
+            } else if (isLetter(event.key)) {
+                selectLetter(event.key.toUpperCase());
+            }
         }
     });
 
@@ -331,6 +339,7 @@ const App = () => {
         <>
             <Header />
             <DifficultySelection setDifficulty={setDifficulty} />
+            <Login port={port}/>
         </>
     );
 };
