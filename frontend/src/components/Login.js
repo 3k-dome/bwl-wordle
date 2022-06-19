@@ -149,7 +149,7 @@ const Login = ({jwtToken, setJwtToken ,port, loggedIn, setLoggedIn, loginMsg, se
                 </div>
                 <div className="notLoggedIn" style={{display: loggedIn? 'flex' : 'none'}}>
                     <div className="login-form-submit" >
-                        <input type="submit" value={'Logout'} onClick={logout}/>
+                        <button  value={'Logout'} onClick={logout}><span className="material-symbols-outlined">logout</span></button>
                     </div>
                 </div>
 

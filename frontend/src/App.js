@@ -324,7 +324,7 @@ const App = () => {
     } else {
         return (
             <>
-                <Header setDifficulty={setDifficulty} gameOver={gameOver[0]} gameOverModal={gameOverModal} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
+                <Header jwtToken={jwtToken} setJwtToken={setJwtToken} setDifficulty={setDifficulty} gameOver={gameOver[0]} gameOverModal={gameOverModal} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
 
                 <AppContext.Provider
                     value={{

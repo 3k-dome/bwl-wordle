@@ -48,10 +48,10 @@ body {
 }
 
 .settings {
-  width: 30%;
+  width: 10%;
   align-self: center;
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
 }
 
 .settings > * {
@@ -71,7 +71,7 @@ body {
 
 .countdown {
   text-align: center;
-  width: 30%;
+  width: 35%;
 }
 
 .raster {
@@ -181,6 +181,8 @@ body {
   width: 15rem;
   height: 3rem;
   margin: 1rem;
+  background-color: var(--border-color);
+  border-radius: 5px;
 
 
   input {
@@ -190,7 +192,9 @@ body {
     padding: 0.5rem;
     border: none;
     border-radius: 5px;
-    background-color: var(--border-color);
+    background: transparent;
+    z-index: 1;
+
 
 
     &:-webkit-autofill {
@@ -238,7 +242,7 @@ body {
 .login-form-submit {
   text-align: start;
 
-  input {
+  input, button {
     margin: 0 0 0 1rem;
     color: var(--text-color);
     background-color: var(--key-color);
@@ -255,6 +259,8 @@ body {
 }
 
 .user {
+  width: 25%;
+
   .login-form {
     flex-direction: row;
     padding: 0;
