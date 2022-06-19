@@ -38,6 +38,7 @@ body {
   width: 100%;
   display: flex;
   justify-content: space-around;
+  align-items: center;
 }
 
 .title {
@@ -70,7 +71,6 @@ body {
 
 .countdown {
   text-align: center;
-  align-self: end;
   width: 30%;
 }
 
@@ -168,12 +168,15 @@ body {
   padding: 1rem;
 }
 
-#login-form {
+.login-form {
   margin: 1rem;
   padding-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
 }
 
-#login-form-username, #login-form-password {
+.login-form-username, .login-form-password {
   position: relative;
   width: 15rem;
   height: 3rem;
@@ -222,13 +225,17 @@ body {
     transition: all 300ms ease-in;
   }
 }
+.loggedIn {
+  width: 100%;
+  align-items: center!important;
+}
 
-#login-form-info {
+.login-form-info {
   text-align: center;
   padding: 1rem;
 }
 
-#login-form-submit {
+.login-form-submit {
   text-align: start;
 
   input {
@@ -238,10 +245,27 @@ body {
     padding: 0.5rem;
     border-radius: 5px;
     border: none;
+    cursor: pointer;
 
     &:hover {
       background-color: var(--text-color);
       color: var(--key-color);
+    }
+  }
+}
+
+.user {
+  .login-form {
+    flex-direction: row;
+    padding: 0;
+  }
+
+  .notLoggedIn {
+    align-items: center;
+
+    input {
+      font-size: 10px;
+
     }
   }
 }

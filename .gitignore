@@ -186,3 +186,6 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 /.idea/watcherTasks.xml
+/.idea/dataSources/d91a2279-aec9-4712-aa23-8550eb7fa15b.xml
+/.idea/dataSources.local.xml
+/.idea/dataSources.xml

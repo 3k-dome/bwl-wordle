@@ -38,6 +38,13 @@ const App = () => {
 
     const [keyColor, setKeyColor] = useState({});
 
+    const [loginMsg, setLoginMsg] = useState('')
+
+    const [loggedIn, setLoggedIn] = useState(false)
+
+    const [jwtToken, setJwtToken] = useState('')
+
+
     //get length of todays word
     useEffect(() => {
         async function getWordLength() {
@@ -279,7 +286,7 @@ const App = () => {
 
     //keyboard events
     const handleKeyboard = useCallback((event) => {
-        if (difficulty) {
+        if (difficulty && loggedIn) {
             if (event.key === "Enter") {
                 submitTry();
             } else if (event.key === "Backspace") {
@@ -300,10 +307,24 @@ const App = () => {
     const gameOverModal = useRef();
 
     //page presentation in dependency on current states (difficulty set?, game over?)
-    if (difficulty) {
+    if (!loggedIn) {
         return (
             <>
-                <Header gameOver={gameOver[0]} gameOverModal={gameOverModal} />
+                <Header loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
+                <Login jwtToken={jwtToken} setJwtToken={setJwtToken} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
+            </>
+        );
+    } else if (!difficulty) {
+        return (
+            <>
+                <Header jwtToken={jwtToken} setJwtToken={setJwtToken} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
+                <DifficultySelection setDifficulty={setDifficulty} />
+            </>
+        );
+    } else {
+        return (
+            <>
+                <Header setDifficulty={setDifficulty} gameOver={gameOver[0]} gameOverModal={gameOverModal} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
 
                 <AppContext.Provider
                     value={{
@@ -335,13 +356,6 @@ const App = () => {
             </>
         );
     }
-    return (
-        <>
-            <Header />
-            <DifficultySelection setDifficulty={setDifficulty} />
-            <Login port={port}/>
-        </>
-    );
 };
 
 export default App;
