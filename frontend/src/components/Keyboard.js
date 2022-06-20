@@ -4,16 +4,16 @@ import {AppContext} from "../App";
 
 const Keyboard = () => {
 
-    const {handleKeyboard, delLetter, submitTry, board, attempt, notInitialRender} = useContext(AppContext)
+    const {handleKeyboard, delLetter, submitTry, board, attempt, notInitialRender, keyBoardDiv} = useContext(AppContext)
 
 
 
         return (
-            <div className={"keyboard"} onKeyDown={handleKeyboard}>
+            <div className={"keyboard"} onKeyDown={handleKeyboard} ref={keyBoardDiv}>
                 <div className="keyboard-row">
                     <Key letter={"Q"}/>
                     <Key letter={"W"}/>
-                    <Key letter={"E"} color={''}/>
+                    <Key letter={"E"}/>
                     <Key letter={"R"}/>
                     <Key letter={"T"}/>
                     <Key letter={"Z"}/>

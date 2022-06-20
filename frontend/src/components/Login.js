@@ -1,7 +1,7 @@
 import React, {useRef, useState, useEffect} from "react";
 import {AppContext} from "../App";
 
-const Login = ({jwtToken, setJwtToken ,port, loggedIn, setLoggedIn, loginMsg, setLoginMsg, setDifficulty}) => {
+const Login = ({setKeyColor ,jwtToken, setJwtToken ,port, loggedIn, setLoggedIn, loginMsg, setLoginMsg, setDifficulty}) => {
 
     const username = useRef()
     const password = useRef()
@@ -99,15 +99,24 @@ const Login = ({jwtToken, setJwtToken ,port, loggedIn, setLoggedIn, loginMsg, se
 
     const logout = async (e) => {
         e.preventDefault()
-        const response = await logoutFetch(JSON.parse(localStorage.getItem('jwt')))
 
-        console.log(response)
+        if (loginMsg !== 'Guest') {
+            const response = await logoutFetch(JSON.parse(localStorage.getItem('jwt')))
+            setJwtToken('')
+            console.log(response)
+        }
+
+
         setLoggedIn(!loggedIn)
         setLoginMsg('')
-        setJwtToken('')
+
 
         if (setDifficulty) {
             setDifficulty(false)
+        }
+
+        if (setKeyColor) {
+            setKeyColor({})
         }
     }
 
@@ -129,6 +138,11 @@ const Login = ({jwtToken, setJwtToken ,port, loggedIn, setLoggedIn, loginMsg, se
         }
     }
 
+    const guest = () => {
+        setLoggedIn(!loggedIn)
+        setLoginMsg(`Guest`)
+    }
+
     return (
         <div>
             <form action="" className={'login-form'}>
@@ -145,6 +159,7 @@ const Login = ({jwtToken, setJwtToken ,port, loggedIn, setLoggedIn, loginMsg, se
                     <div className={'login-form-submit'}>
                         <input type="submit" value={'Login'} onClick={login}/>
                         <input type="submit" value={'Register'} onClick={register}/>
+                        <span onClick={guest}>Proceed as guest</span>
                     </div>
                 </div>
                 <div className="notLoggedIn" style={{display: loggedIn? 'flex' : 'none'}}>

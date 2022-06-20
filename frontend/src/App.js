@@ -44,6 +44,10 @@ const App = () => {
 
     const [jwtToken, setJwtToken] = useState('')
 
+    const boardDiv = useRef()
+
+    const keyBoardDiv = useRef()
+
 
     //get length of todays word
     useEffect(() => {
@@ -55,14 +59,29 @@ const App = () => {
 
             return wordLength.length;
         }
-        getWordLength();
+        getWordLength()
     }, []);
 
     //create the board when user sets difficulty
     useEffect(() => {
         function createGame() {
+        // if (localStorage.getItem("jwt")) {
+            if(localStorage.getItem("board")) {
+                setBoard(JSON.parse(localStorage.getItem("board")))
+                setDifficulty(JSON.parse(localStorage.getItem("difficulty")))
+                setAttempt(JSON.parse(localStorage.getItem("attempt")))
+                setKeyColor(JSON.parse(localStorage.getItem("keyColor")))
+
+                if (localStorage.getItem("game-over")) {
+                    setGameOver(JSON.parse(localStorage.getItem("game-over")))
+                }
+            // }
+        }else {
             //board size defined by difficulty and word length
+            // console.log(JSON.parse(localStorage.getItem("board")).length)
+            console.log('User')
             const boardSize = [difficulty, length];
+            console.log(boardSize)
             const tempBoard = [];
 
             //create board object as storage for information
@@ -81,8 +100,11 @@ const App = () => {
                 }
             }
             setBoard(tempBoard);
+        }
 
-            return tempBoard;
+
+
+            // return tempBoard;
         }
         createGame();
     }, [difficulty]);
@@ -92,6 +114,11 @@ const App = () => {
     const currAttempt = attempt;
     //needed anymore?
     const notInitialRender = useRef(false);
+
+
+    // localStorage.setItem("key-board", JSON.stringify(keyBoardDiv.current))
+
+    // console.log(JSON.parse(localStorage.getItem("board")) === true)
 
     //function to add chosen letter to the board
     const selectLetter = (letter) => {
@@ -211,6 +238,12 @@ const App = () => {
                     });
                     setKeyColor({ ...keyColor, ...keyColors });
                     setGameOver([true, true]);
+                    setKeyColor({ ...keyColor, ...keyColors });
+
+                    localStorage.setItem("game-over", JSON.stringify([true, true]))
+                    localStorage.setItem("board", JSON.stringify(currBoard))
+                    localStorage.setItem("keyColor", JSON.stringify({ ...keyColor, ...keyColors }))
+
                     return;
                 }
 
@@ -268,17 +301,41 @@ const App = () => {
                     })
 
                     if (currAttempt < difficulty) {
-                        currBoard[currAttempt + 1][0].active = "active";
-                        setAttempt(currAttempt + 1);
-                        notInitialRender.current = true;
-                        setKeyColor({ ...keyColor, ...keyColors });
+
+                        // boardDiv.current.children[currAttempt].classList.toggle('submitted')
+
+                        // setTimeout(() => {
+                        //     boardDiv.current.children[currAttempt].classList.toggle('submitted')
+
+                            currBoard[currAttempt + 1][0].active = "active";
+                            setAttempt(currAttempt + 1);
+                            notInitialRender.current = true;
+                            setKeyColor({ ...keyColor, ...keyColors });
+                        // },1100)
+
                     } else {
                         setGameOver([true, false]);
+                        localStorage.setItem("game-over", JSON.stringify([true, false]))
                     }
 
+
                     setPosition(0);
+                    localStorage.setItem("board", JSON.stringify(currBoard))
+                    localStorage.setItem("attempt", JSON.stringify(currAttempt + 1))
+                    localStorage.setItem("keyColor", JSON.stringify({ ...keyColor, ...keyColors }))
+
+
+
+                    console.log(keyColors)
+                    console.log(keyColor)
+                    // console.log(keyBoardDiv.current)
                 } else {
-                    alert("Choose a valid word");
+                    // alert("Choose a valid word");
+                    boardDiv.current.children[currAttempt].classList.toggle('invalid')
+                    setTimeout(() => {
+                        boardDiv.current.children[currAttempt].classList.toggle('invalid')
+                    }, 150)
+
                 }
             }
         }
@@ -324,7 +381,7 @@ const App = () => {
     } else {
         return (
             <>
-                <Header jwtToken={jwtToken} setJwtToken={setJwtToken} setDifficulty={setDifficulty} gameOver={gameOver[0]} gameOverModal={gameOverModal} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
+                <Header jwtToken={jwtToken} setJwtToken={setJwtToken} setDifficulty={setDifficulty} gameOver={gameOver[0]} gameOverModal={gameOverModal} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} setKeyColor={setKeyColor}/>
 
                 <AppContext.Provider
                     value={{
@@ -341,16 +398,18 @@ const App = () => {
                         difficulty,
                         notInitialRender,
                         keyColor,
+                        keyBoardDiv,
+                        boardDiv
                     }}
                 >
                     {gameOver[0] ? (
                         <GameOver
-                            attempts={currAttempt + 1}
+                            attempts={JSON.parse(localStorage.getItem("game-over"))[0]? currAttempt + 1: currAttempt + 1}
                             won={gameOver[1]}
                             gameOverModal={gameOverModal}
                         />
                     ) : null}
-                    <Board />
+                    <Board boardDiv={boardDiv}/>
                     <Keyboard />
                 </AppContext.Provider>
             </>

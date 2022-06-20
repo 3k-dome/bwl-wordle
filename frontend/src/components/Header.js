@@ -2,7 +2,7 @@ import React, {useRef, useEffect, useState} from "react";
 import Countdown from "./Countdown";
 import Login from "./Login";
 
-const Header = ({jwtToken, setJwtToken ,gameOver, gameOverModal, loggedIn, loginMsg, setLoggedIn, port, setLoginMsg, setDifficulty}) => {
+const Header = ({setKeyColor ,jwtToken, setJwtToken ,gameOver, gameOverModal, loggedIn, loginMsg, setLoggedIn, port, setLoginMsg, setDifficulty}) => {
 
     const changeBtn = useRef();
 
@@ -66,8 +66,11 @@ const Header = ({jwtToken, setJwtToken ,gameOver, gameOverModal, loggedIn, login
 
         return (
             <div className={"header"}>
-                <div className="user" style={{display: loggedIn? 'block' : 'none'}}>
-                    <Login jwtToken={jwtToken} setJwtToken={setJwtToken} setDifficulty={setDifficulty}  loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
+                <div className="user">
+                    <div style={{display: loggedIn? 'block' : 'none'}}>
+                        <Login setKeyColor={setKeyColor} jwtToken={jwtToken} setJwtToken={setJwtToken} setDifficulty={setDifficulty}  loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
+                    </div>
+
                 </div>
                 <div className="settings">
                     <div className="color-theme" ref={changeBtn} onClick={() => setDarkMode(!darkMode)}></div>
