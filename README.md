@@ -1,3 +1,7 @@
+### 27.07. Moved some stuff
+* backend: https://github.com/3k-dome/bwl-wordle-backend
+* scraper: https://github.com/3k-dome/bwl-wordle-web-scraper
+
 # bwl-wordle
 Wordle but with business related terms. University project 2022.
 
