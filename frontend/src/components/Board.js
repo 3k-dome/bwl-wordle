@@ -3,9 +3,9 @@ import Square from "./Square";
 import {AppContext} from "../App";
 
 const Board = () => {
-    const {board} = useContext(AppContext)
+    const {board, boardDiv} = useContext(AppContext)
         return(
-            <div className={"raster"}>
+            <div className={"raster"} ref={boardDiv}>
                 {board.map((row, index) => {
                 return(
                 <div className="raster-row" key={index}>

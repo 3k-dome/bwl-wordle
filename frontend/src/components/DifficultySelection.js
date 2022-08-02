@@ -4,6 +4,7 @@ const DifficultySelection = ({setDifficulty}) => {
 
     const getDifficulty = (e) => {
         setDifficulty(e.target.dataset.attempts -1)
+        localStorage.setItem("difficulty", JSON.stringify(e.target.dataset.attempts -1))
     }
 
     return (

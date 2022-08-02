@@ -5,12 +5,14 @@ import React, {
     useEffect,
     useRef,
 } from "react";
+import './styles.scss'
 import Board from "./components/Board";
 import Keyboard from "./components/Keyboard";
 import Header from "./components/Header";
 
 import DifficultySelection from "./components/DifficultySelection";
 import GameOver from "./components/GameOver";
+import Login from "./components/Login";
 
 export const AppContext = createContext();
 
@@ -36,6 +38,17 @@ const App = () => {
 
     const [keyColor, setKeyColor] = useState({});
 
+    const [loginMsg, setLoginMsg] = useState('')
+
+    const [loggedIn, setLoggedIn] = useState(false)
+
+    const [jwtToken, setJwtToken] = useState('')
+
+    const boardDiv = useRef()
+
+    const keyBoardDiv = useRef()
+
+
     //get length of todays word
     useEffect(() => {
         async function getWordLength() {
@@ -46,14 +59,29 @@ const App = () => {
 
             return wordLength.length;
         }
-        getWordLength();
+        getWordLength()
     }, []);
 
     //create the board when user sets difficulty
     useEffect(() => {
         function createGame() {
+        // if (localStorage.getItem("jwt")) {
+            if(localStorage.getItem("board")) {
+                setBoard(JSON.parse(localStorage.getItem("board")))
+                setDifficulty(JSON.parse(localStorage.getItem("difficulty")))
+                setAttempt(JSON.parse(localStorage.getItem("attempt")))
+                setKeyColor(JSON.parse(localStorage.getItem("keyColor")))
+
+                if (localStorage.getItem("game-over")) {
+                    setGameOver(JSON.parse(localStorage.getItem("game-over")))
+                }
+            // }
+        }else {
             //board size defined by difficulty and word length
+            // console.log(JSON.parse(localStorage.getItem("board")).length)
+            console.log('User')
             const boardSize = [difficulty, length];
+            console.log(boardSize)
             const tempBoard = [];
 
             //create board object as storage for information
@@ -72,8 +100,11 @@ const App = () => {
                 }
             }
             setBoard(tempBoard);
+        }
 
-            return tempBoard;
+
+
+            // return tempBoard;
         }
         createGame();
     }, [difficulty]);
@@ -84,18 +115,25 @@ const App = () => {
     //needed anymore?
     const notInitialRender = useRef(false);
 
+
+    // localStorage.setItem("key-board", JSON.stringify(keyBoardDiv.current))
+
+    // console.log(JSON.parse(localStorage.getItem("board")) === true)
+
     //function to add chosen letter to the board
     const selectLetter = (letter) => {
         //only add letter if space is available
-        if (currPosition <= length) {
-            currBoard[currAttempt][currPosition].letter = letter;
-            currBoard[currAttempt][currPosition].active = "";
-            //jump to next square
-            if (currPosition < length) {
-                currBoard[currAttempt][currPosition + 1].active = "active";
+        if (!gameOver[0]) {
+            if (currPosition <= length) {
+                currBoard[currAttempt][currPosition].letter = letter;
+                currBoard[currAttempt][currPosition].active = "";
+                //jump to next square
+                if (currPosition < length) {
+                    currBoard[currAttempt][currPosition + 1].active = "active";
+                }
+                setPosition(currPosition + 1);
+                setBoard(currBoard);
             }
-            setPosition(currPosition + 1);
-            setBoard(currBoard);
         }
     };
 
@@ -202,6 +240,12 @@ const App = () => {
                     });
                     setKeyColor({ ...keyColor, ...keyColors });
                     setGameOver([true, true]);
+                    setKeyColor({ ...keyColor, ...keyColors });
+
+                    localStorage.setItem("game-over", JSON.stringify([true, true]))
+                    localStorage.setItem("board", JSON.stringify(currBoard))
+                    localStorage.setItem("keyColor", JSON.stringify({ ...keyColor, ...keyColors }))
+
                     return;
                 }
 
@@ -214,6 +258,7 @@ const App = () => {
                             letter.color = colorMapping(
                                 letterInformation[index]
                             );
+
                         //console.log(letterInformation[index])
                             keyColors[letter.letter] = colorOverride(
                                 keyColor[letter.letter],
@@ -234,7 +279,7 @@ const App = () => {
 
                     const uniqueLetters = [...new Set(allLetters)]
 
-                    //console.log(uniqueLetters)
+                    console.log(uniqueLetters)
 
                     //console.log(multipleLetter.filter(letter => letter.letter === 'S'))
 
@@ -242,10 +287,13 @@ const App = () => {
                         const uniqueLetterArray = multipleLetter.filter(letter => letter.letter === unique)
                         //console.log(uniqueLetterArray)
                         uniqueLetterArray.sort((a, b) => a.color.localeCompare(b.color));
+                        console.log(uniqueLetterArray)
                         uniqueLetterArray.forEach((letter, index) => {
                             if (uniqueLetterArray.length > letter.count) {
                                 if (index <= letter.count -1) {
-                                    letter.color = 'green'
+                                    letter.color = colorMapping(
+                                        letterInformation[letter.index]
+                                    )
                                 } else {
                                     letter.color = 'gray'
                                 }
@@ -255,17 +303,41 @@ const App = () => {
                     })
 
                     if (currAttempt < difficulty) {
-                        currBoard[currAttempt + 1][0].active = "active";
-                        setAttempt(currAttempt + 1);
-                        notInitialRender.current = true;
-                        setKeyColor({ ...keyColor, ...keyColors });
+
+                        // boardDiv.current.children[currAttempt].classList.toggle('submitted')
+
+                        // setTimeout(() => {
+                        //     boardDiv.current.children[currAttempt].classList.toggle('submitted')
+
+                            currBoard[currAttempt + 1][0].active = "active";
+                            setAttempt(currAttempt + 1);
+                            notInitialRender.current = true;
+                            setKeyColor({ ...keyColor, ...keyColors });
+                        // },1100)
+
                     } else {
                         setGameOver([true, false]);
+                        localStorage.setItem("game-over", JSON.stringify([true, false]))
                     }
 
+
                     setPosition(0);
+                    localStorage.setItem("board", JSON.stringify(currBoard))
+                    localStorage.setItem("attempt", JSON.stringify(currAttempt + 1))
+                    localStorage.setItem("keyColor", JSON.stringify({ ...keyColor, ...keyColors }))
+
+
+
+                    console.log(keyColors)
+                    console.log(keyColor)
+                    // console.log(keyBoardDiv.current)
                 } else {
-                    alert("Choose a valid word");
+                    // alert("Choose a valid word");
+                    boardDiv.current.children[currAttempt].classList.toggle('invalid')
+                    setTimeout(() => {
+                        boardDiv.current.children[currAttempt].classList.toggle('invalid')
+                    }, 150)
+
                 }
             }
         }
@@ -273,12 +345,14 @@ const App = () => {
 
     //keyboard events
     const handleKeyboard = useCallback((event) => {
-        if (event.key === "Enter") {
-            submitTry();
-        } else if (event.key === "Backspace") {
-            delLetter();
-        } else if (isLetter(event.key)) {
-            selectLetter(event.key.toUpperCase());
+        if (difficulty && loggedIn) {
+            if (event.key === "Enter") {
+                submitTry();
+            } else if (event.key === "Backspace") {
+                delLetter();
+            } else if (isLetter(event.key)) {
+                selectLetter(event.key.toUpperCase());
+            }
         }
     });
 
@@ -292,10 +366,24 @@ const App = () => {
     const gameOverModal = useRef();
 
     //page presentation in dependency on current states (difficulty set?, game over?)
-    if (difficulty) {
+    if (!loggedIn) {
         return (
             <>
-                <Header gameOver={gameOver[0]} gameOverModal={gameOverModal} />
+                <Header loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
+                <Login jwtToken={jwtToken} setJwtToken={setJwtToken} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
+            </>
+        );
+    } else if (!difficulty) {
+        return (
+            <>
+                <Header jwtToken={jwtToken} setJwtToken={setJwtToken} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
+                <DifficultySelection setDifficulty={setDifficulty} />
+            </>
+        );
+    } else {
+        return (
+            <>
+                <Header jwtToken={jwtToken} setJwtToken={setJwtToken} setDifficulty={setDifficulty} gameOver={gameOver[0]} gameOverModal={gameOverModal} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} setKeyColor={setKeyColor}/>
 
                 <AppContext.Provider
                     value={{
@@ -312,27 +400,23 @@ const App = () => {
                         difficulty,
                         notInitialRender,
                         keyColor,
+                        keyBoardDiv,
+                        boardDiv
                     }}
                 >
                     {gameOver[0] ? (
                         <GameOver
-                            attempts={currAttempt + 1}
+                            attempts={JSON.parse(localStorage.getItem("game-over"))[0]? currAttempt + 1: currAttempt + 1}
                             won={gameOver[1]}
                             gameOverModal={gameOverModal}
                         />
                     ) : null}
-                    <Board />
+                    <Board boardDiv={boardDiv}/>
                     <Keyboard />
                 </AppContext.Provider>
             </>
         );
     }
-    return (
-        <>
-            <Header />
-            <DifficultySelection setDifficulty={setDifficulty} />
-        </>
-    );
 };
 
 export default App;
