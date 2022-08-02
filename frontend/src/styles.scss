@@ -262,6 +262,7 @@ body {
     }
 
     &:hover {
+      transition-delay: 100ms;
       background-color: var(--text-color);
       color: var(--key-color);
     }

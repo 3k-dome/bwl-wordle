@@ -123,15 +123,17 @@ const App = () => {
     //function to add chosen letter to the board
     const selectLetter = (letter) => {
         //only add letter if space is available
-        if (currPosition <= length) {
-            currBoard[currAttempt][currPosition].letter = letter;
-            currBoard[currAttempt][currPosition].active = "";
-            //jump to next square
-            if (currPosition < length) {
-                currBoard[currAttempt][currPosition + 1].active = "active";
+        if (!gameOver[0]) {
+            if (currPosition <= length) {
+                currBoard[currAttempt][currPosition].letter = letter;
+                currBoard[currAttempt][currPosition].active = "";
+                //jump to next square
+                if (currPosition < length) {
+                    currBoard[currAttempt][currPosition + 1].active = "active";
+                }
+                setPosition(currPosition + 1);
+                setBoard(currBoard);
             }
-            setPosition(currPosition + 1);
-            setBoard(currBoard);
         }
     };
 
