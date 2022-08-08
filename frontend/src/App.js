@@ -13,6 +13,7 @@ import Header from "./components/Header";
 import DifficultySelection from "./components/DifficultySelection";
 import GameOver from "./components/GameOver";
 import Login from "./components/Login";
+import Leaderboard from "./components/Leaderboard";
 
 export const AppContext = createContext();
 
@@ -44,9 +45,14 @@ const App = () => {
 
     const [jwtToken, setJwtToken] = useState('')
 
+    const [displayLeaderboard, setDisplayLeaderboard] = useState(false)
+
     const boardDiv = useRef()
 
     const keyBoardDiv = useRef()
+
+    const leaderboard = useRef()
+
 
 
     //get length of todays word
@@ -369,21 +375,29 @@ const App = () => {
     if (!loggedIn) {
         return (
             <>
-                <Header loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
+                <Header loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} leaderboard={leaderboard} displayLeaderboard={displayLeaderboard} setDisplayLeaderboard={setDisplayLeaderboard}/>
+                <Leaderboard
+                    leaderboard={leaderboard}
+                    displayLeaderboard={displayLeaderboard}
+                />
                 <Login jwtToken={jwtToken} setJwtToken={setJwtToken} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
             </>
         );
     } else if (!difficulty) {
         return (
             <>
-                <Header jwtToken={jwtToken} setJwtToken={setJwtToken} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
+                <Header loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} leaderboard={leaderboard} displayLeaderboard={displayLeaderboard} setDisplayLeaderboard={setDisplayLeaderboard}/>
+                <Leaderboard
+                    leaderboard={leaderboard}
+                    displayLeaderboard={displayLeaderboard}
+                />
                 <DifficultySelection setDifficulty={setDifficulty} />
             </>
         );
     } else {
         return (
             <>
-                <Header jwtToken={jwtToken} setJwtToken={setJwtToken} setDifficulty={setDifficulty} gameOver={gameOver[0]} gameOverModal={gameOverModal} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} setKeyColor={setKeyColor}/>
+                <Header loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} leaderboard={leaderboard} displayLeaderboard={displayLeaderboard} setDisplayLeaderboard={setDisplayLeaderboard}/>
 
                 <AppContext.Provider
                     value={{
@@ -411,6 +425,13 @@ const App = () => {
                             gameOverModal={gameOverModal}
                         />
                     ) : null}
+                    {/*{displayLeaderboard[0] ? (*/}
+                        <Leaderboard
+                            leaderboard={leaderboard}
+                            displayLeaderboard={displayLeaderboard}
+                            notInitialRender={notInitialRender}
+                        />
+                    {/*) : null}*/}
                     <Board boardDiv={boardDiv}/>
                     <Keyboard />
                 </AppContext.Provider>

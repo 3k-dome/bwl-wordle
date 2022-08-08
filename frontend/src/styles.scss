@@ -40,6 +40,76 @@ body {
   display: flex;
   justify-content: space-around;
   align-items: center;
+
+}
+
+
+.hamburger {
+  width: 2.5%;
+  padding-left: 1rem;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  .line {
+    width: 100%;
+    border: 1px solid var(--text-color);
+    margin: 0.5rem;
+    transition: ease-in-out 0.25s;
+  }
+}
+
+@keyframes openLeaderboard {
+  0% {width: 0;
+    opacity: 0}
+  100% {width: 33%;
+    opacity: 1}
+}
+
+@keyframes closeLeaderboard {
+  0% {width: 33%;
+    opacity: 1}
+  100% {width: 0%;
+    opacity: 0}
+}
+
+.leaderboard {
+  height: 90%;
+  border-right: 2px solid var(--border-color);
+  position: absolute;
+  left: 0;
+  top: 10%;
+  z-index: 20;
+  overflow: hidden;
+
+  &.hidden {
+    animation: closeLeaderboard ease-in-out 0.25s forwards;
+  }
+
+  &.shown {
+    animation: openLeaderboard ease-in-out 0.25s forwards;
+  }
+
+  .leaderboard-content {
+    padding: 2rem;
+  }
+}
+.user {
+  width: 20%;
+
+  .login-form {
+    flex-direction: row;
+    padding: 0;
+  }
+
+  .notLoggedIn {
+    align-items: center;
+
+    input {
+      font-size: 10px;
+    }
+  }
 }
 
 .title {
@@ -291,22 +361,7 @@ body {
   }
 }
 
-.user {
-  width: 25%;
 
-  .login-form {
-    flex-direction: row;
-    padding: 0;
-  }
-
-  .notLoggedIn {
-    align-items: center;
-
-    input {
-      font-size: 10px;
-    }
-  }
-}
 
 @keyframes invalidAnimation {
   0%   {transform: translateX(0);}
