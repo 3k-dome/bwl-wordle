@@ -386,7 +386,7 @@ const App = () => {
     } else if (!difficulty) {
         return (
             <>
-                <Header loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} leaderboard={leaderboard} displayLeaderboard={displayLeaderboard} setDisplayLeaderboard={setDisplayLeaderboard}/>
+                <Header gameOver={gameOver[0]} gameOverModal={gameOverModal} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} leaderboard={leaderboard} displayLeaderboard={displayLeaderboard} setDisplayLeaderboard={setDisplayLeaderboard}/>
                 <Leaderboard
                     leaderboard={leaderboard}
                     displayLeaderboard={displayLeaderboard}
@@ -397,7 +397,7 @@ const App = () => {
     } else {
         return (
             <>
-                <Header loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} leaderboard={leaderboard} displayLeaderboard={displayLeaderboard} setDisplayLeaderboard={setDisplayLeaderboard}/>
+                <Header gameOver={gameOver[0]} gameOverModal={gameOverModal} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} leaderboard={leaderboard} displayLeaderboard={displayLeaderboard} setDisplayLeaderboard={setDisplayLeaderboard}/>
 
                 <AppContext.Provider
                     value={{
