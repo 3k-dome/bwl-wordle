@@ -74,9 +74,9 @@ const Header = ({setKeyColor ,jwtToken, setJwtToken ,gameOver, gameOverModal, lo
         } else {
             hamburger.current.children[1].style.transform = 'scale(0)'
 
-            hamburger.current.children[0].style.transform = 'translateY(8px) rotate(45deg) '
+            hamburger.current.children[0].style.transform = 'translateY(6.5pt) rotate(45deg) '
             // hamburger.current.children[0].style.transform = ''
-            hamburger.current.children[2].style.transform = 'translateY(-8px) rotate(-45deg)'
+            hamburger.current.children[2].style.transform = 'translateY(-6.5pt) rotate(-45deg)'
         }
     }
 
