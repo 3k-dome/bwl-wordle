@@ -85,11 +85,12 @@ const Header = ({setKeyColor ,jwtToken, setJwtToken ,gameOver, gameOverModal, lo
 
         return (
             <div className={"header"}>
-                <div className={`hamburger`} ref={hamburger} onClick={changeLeaderboardDisplay}>
+                {loggedIn ? <div className={`hamburger`} ref={hamburger} onClick={changeLeaderboardDisplay}>
                     <div className={'line'}></div>
                     <div className={'line'}></div>
                     <div className={'line'}></div>
-                </div>
+                </div> : null}
+
                 <div className="user">
                     <div style={{display: loggedIn? 'block' : 'none'}}>
                         <Login setKeyColor={setKeyColor} jwtToken={jwtToken} setJwtToken={setJwtToken} setDifficulty={setDifficulty}  loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>

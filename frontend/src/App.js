@@ -376,10 +376,10 @@ const App = () => {
         return (
             <>
                 <Header loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} leaderboard={leaderboard} displayLeaderboard={displayLeaderboard} setDisplayLeaderboard={setDisplayLeaderboard}/>
-                <Leaderboard
-                    leaderboard={leaderboard}
-                    displayLeaderboard={displayLeaderboard}
-                />
+                {/*<Leaderboard*/}
+                {/*    leaderboard={leaderboard}*/}
+                {/*    displayLeaderboard={displayLeaderboard}*/}
+                {/*/>*/}
                 <Login jwtToken={jwtToken} setJwtToken={setJwtToken} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
             </>
         );

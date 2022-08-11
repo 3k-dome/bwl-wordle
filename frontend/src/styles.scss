@@ -132,14 +132,12 @@ body {
     .leaderboard-content-statistics {
       height: 90%;
       .statistics-slider {
+        position: relative;
         //border: 1px solid red;
         margin: 0 auto;
         height: 30%;
-        display: grid;
-        grid-template-areas: 'back stats stats stats forward '
-                              'slider slider slider slider slider';
+        display: flex;
         width: 100%;
-
 
         .btn-before {
           grid-area: back;
@@ -147,6 +145,7 @@ body {
           justify-content: start;
           align-items: center;
           cursor: pointer;
+          width: 5%;
         }
 
         .btn-after {
@@ -155,17 +154,27 @@ body {
           justify-content: end;
           align-items: center;
           cursor: pointer;
+          width: 5%;
         }
         .statistics-slider-content {
           height: 100%;
-          overflow: hidden;
+          width: 100%;
           grid-area: stats;
+          display: flex;
+          flex-direction: row;
+          overflow: scroll;
 
-          > div {
+          &::-webkit-scrollbar {
+            display: none;
+          }
+
+          .totalStats {
             height: 100%;
+            width: 100%;
             display: flex;
             align-items: center;
             flex-wrap: wrap;
+            flex-shrink: 0;
             .title {
               font-size: 1.5rem;
               width: 100%;
@@ -194,8 +203,27 @@ body {
 
         .statistics-slider-dots {
           text-align: center;
+          width: 100%;
           height: 10%;
-          grid-area: slider;
+          position: absolute;
+          bottom: 2rem;
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+
+          .dot {
+            padding: 0.5rem;
+            margin: 0.5rem;
+            width: 1rem;
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
+
+            &.active {
+              background-color: var(--text-color);
+              box-shadow: 0 0 4px var(--border-color);
+              transform: scale(1.5);
+            }
+          }
         }
       }
     }
@@ -252,53 +280,67 @@ body {
 }
 
 .raster {
-  width: 300px;
-  height: fit-content;
+  width: min(500px, 60%);
+  height: 40%;
   display: flex;
   margin: 5em auto;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-evenly;
+  gap: 2%;
 }
 
 .raster-row {
   display: flex;
   justify-content: center;
-  height: fit-content;
+  height: 16%;
+  gap: 2%;
 }
 
 .square {
   border: 0.1em solid var(--key-color);
-  width: 60px;
-  height: 60px;
+  width: min(15%, 60px);
+  height: 100%;
   padding: 1em;
-  margin: 0.2em;
+  //margin: 5% 1%;
   display: flex;
   justify-content: center;
   align-items: center;
+  box-sizing: border-box;
+  font-size: 90%;
 }
 
 .active {
   border: 0.2em solid var(--key-color);
-  transform: scale(1.1);
+  //transform: scale(1.1);
 }
 
 .keyboard {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
   margin-bottom: 2em;
+  height: 20%;
 }
 
 .keyboard-row {
   display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 33%;
 }
 
 .key {
-  margin: 0.2em;
-  padding: 0.5em 0.75em;
+  margin: min(0.5%, 0.25rem);
+  padding: 0 min(3%, 20px);
   background-color: var(--key-color);
   border-radius: 3px;
-  font-size: 1.4em;
+  font-size: 120%;
+  width: fit-content;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .key:hover {
