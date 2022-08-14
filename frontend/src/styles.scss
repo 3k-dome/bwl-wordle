@@ -1,5 +1,6 @@
 :root {
   --base-bg-color: rgb(18, 18, 19);
+  --base-bg-gradient: rgb(18,18,19, 0.2);
   --text-color: white;
   --border-color: rgba(58, 58, 60, 1);
   --key-color: rgb(129, 131, 132, 1);
@@ -17,11 +18,13 @@
 
 html {
   height: 100vh;
+  width: 100vw;
 }
 
 body {
   height: 100%;
-  background-color: var(--base-bg-color);
+  width: 100%;
+  background: linear-gradient(var(--base-bg-color), var(--base-bg-gradient));
   margin: 0;
 }
 
@@ -45,41 +48,101 @@ body {
 
 
 .hamburger {
-  width: 2.5%;
-  padding-left: 1rem;
+  width: 10%;
+  padding-left: 1%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
   &:hover {
     cursor: pointer;
   }
 
   .line {
-    width: 100%;
+    width: min(60%, 25px);
     border: 1px solid var(--text-color);
-    margin: 0.5rem;
+    margin: min(3px, 5%);
     transition: ease-in-out 0.25s;
   }
 }
 
-@keyframes openLeaderboard {
-  0% {width: 0;
-    opacity: 0}
-  100% {width: 33%;
-    opacity: 1}
+@media only screen and (min-width: 769px) {
+  @keyframes openLeaderboard {
+    0% {
+      transform: translateX(-100%);
+      opacity: 0
+    }
+    100% {
+      transform: translateX(100%);
+      opacity: 1;
+      visibility: visible
+    }
+  }
+
+  @keyframes closeLeaderboard {
+    0% {
+      transform: translateX(100%);
+      opacity: 1;
+      visibility: visible;
+    }
+    100% {
+      transform: translateX(-100%);
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
 }
 
-@keyframes closeLeaderboard {
-  0% {width: 33%;
-    opacity: 1}
-  100% {width: 0%;
-    opacity: 0}
+@media only screen and (max-width: 768px) {
+  @keyframes openLeaderboard {
+    0% {
+      height: 0;
+      opacity: 0;
+      visibility: hidden;
+    }
+    100% {
+      height: 60%;
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  @keyframes closeLeaderboard {
+    0% {
+      height: 60%;
+      opacity: 1;
+      visibility: visible;
+    }
+    100% {
+      height: 0;
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
 }
+
+
 
 .leaderboard {
-  height: 90%;
-  border-right: 2px solid var(--border-color);
+
+  @media only screen and (max-width: 768px) {
+    width: 100%;
+    border-bottom: 2px solid var(--border-color);
+    top: 10%;
+    left: 0;
+  }
+
+  @media only screen and (min-width: 769px) {
+    height: 90%;
+    border-right: 2px solid var(--border-color);
+    left: -40%;
+    top: 10%;
+    width: 40%;
+
+  }
+
+  visibility: hidden;
   position: absolute;
-  left: 0;
-  top: 10%;
   z-index: 20;
   overflow: hidden;
   background-color: var(--base-bg-color);
@@ -93,7 +156,7 @@ body {
   }
 
   .leaderboard-content {
-    padding: 2rem;
+    padding: 2%;
     display: flex;
     flex-direction: column;
     justify-content: start;
@@ -103,39 +166,45 @@ body {
     > div {
       border: 1px solid var(--border-color);
       border-radius: 2px;
-      margin: 1rem;
-      padding: 1rem;
+      margin: 1%;
+      padding: 1%;
     }
 
     .leaderboard-content-scoreToday {
       display: flex;
       flex-direction: column;
       justify-content: center;
-      height: 10%;
+      height: 20%;
 
       span {
-        padding: 0.5rem;
+        padding: 0.5%;
       }
       .scoreToday-title {
+        width: 81%;
         display: block;
         margin: 0 auto;
+        background-color: var(--key-color);
+        box-shadow: 0 0 3px var(--key-color);
+        border-radius: 2px;
+        text-align: center;
+        font-style: italic;
       }
 
       .scoreToday-score {
         display: block;
         margin: 0 auto;
-        font-size: 1.5rem;
+        font-size: 150%;
         font-weight: bold;
       }
     }
 
     .leaderboard-content-statistics {
-      height: 90%;
+      height: 80%;
       .statistics-slider {
         position: relative;
         //border: 1px solid red;
         margin: 0 auto;
-        height: 30%;
+        height: 100%;
         display: flex;
         width: 100%;
 
@@ -155,6 +224,10 @@ body {
           align-items: center;
           cursor: pointer;
           width: 5%;
+
+          span {
+            top: 50%;
+          }
         }
         .statistics-slider-content {
           height: 100%;
@@ -168,33 +241,54 @@ body {
             display: none;
           }
 
-          .totalStats {
-            height: 100%;
+          .statsByDiff {
+            height: 95%;
             width: 100%;
             display: flex;
             align-items: center;
             flex-wrap: wrap;
             flex-shrink: 0;
+            padding: 4%;
             .title {
-              font-size: 1.5rem;
+              font-size: 150%;
               width: 100%;
+              font-weight: bold;
+              font-style: italic;
+              background-color: var(--key-color);
+              border-radius: 2px;
+              box-shadow: 0 0 3px var(--key-color);
             }
 
             .statistics-content {
               display: flex;
-              justify-content: space-evenly;
+              justify-content: space-between;
               align-items: center;
               height: 100%;
               width: 100%;
 
               div {
                 height: 100%;
+                width: 20%;
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
+                align-items: center;
+                margin: 20% 2%;
 
-                div {
+                .metric, .value {
                   text-align: center;
+                  height: 40%;
+                  width: 100%;
+                  border-radius: 3px;
+                  box-shadow: 0 0 3px var(--square-gray);
+                }
+
+                .metric {
+                  background-color: var(--border-color);
+
+                }
+
+                .value {
                 }
               }
             }
@@ -204,23 +298,31 @@ body {
         .statistics-slider-dots {
           text-align: center;
           width: 100%;
-          height: 10%;
+          height: 5%;
           position: absolute;
-          bottom: 2rem;
+
+          @media only screen and (max-width: 768px) {
+            bottom: 2px;
+          }
+          @media only screen and (min-width: 769px) {
+            bottom: 5px;
+          }
+
           display: flex;
           flex-direction: row;
           justify-content: center;
 
           .dot {
-            padding: 0.5rem;
-            margin: 0.5rem;
-            width: 1rem;
+            padding: 1%;
+            margin: 1%;
+            width: 1px;
+            height: 1px;
             border-radius: 50%;
             border: 1px solid var(--border-color);
 
             &.active {
               background-color: var(--text-color);
-              box-shadow: 0 0 4px var(--border-color);
+              box-shadow: 0 0 2px var(--border-color);
               transform: scale(1.5);
             }
           }
@@ -231,10 +333,15 @@ body {
 }
 .user {
   width: 20%;
+  max-height: 10%;
+  position: absolute;
+  left: 3.5%;
+  top: 10%;
 
   .login-form {
     flex-direction: row;
-    padding: 0;
+    width: 100%;
+    justify-content: start;
   }
 
   .notLoggedIn {
@@ -253,21 +360,28 @@ body {
 }
 
 .settings {
-  width: 10%;
-  align-self: center;
-  display: flex;
-  justify-content: space-evenly;
-}
-
-.settings > * {
-  height: fit-content;
-  width: fit-content;
-  padding: 0.2rem;
-  border: 1px solid var(--border-color);
-  vertical-align: center;
-  border-radius: 20px;
+  width: 15%;
+  align-items: center;
   display: flex;
   justify-content: center;
+  height: 100%;
+
+  div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 35%;
+    aspect-ratio: 1/1;
+    padding: 0.2%;
+    margin: 5%;
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+
+    span {
+      font-size: 100%;
+
+    }
+  }
 }
 
 .settings > *:hover {
@@ -276,37 +390,41 @@ body {
 
 .countdown {
   text-align: center;
-  width: 35%;
+  width: 30%;
 }
 
 .raster {
-  width: min(500px, 60%);
-  height: 40%;
+  width: 100%;
+  max-height: 35%;
   display: flex;
-  margin: 5em auto;
   flex-direction: column;
-  justify-content: space-evenly;
-  gap: 2%;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  gap: 1%;
+  margin: 1%;
 }
 
 .raster-row {
   display: flex;
   justify-content: center;
-  height: 16%;
-  gap: 2%;
+  align-items: center;
+  height: fit-content;
+  gap: 3px;
+  width: 100%;
 }
 
 .square {
   border: 0.1em solid var(--key-color);
-  width: min(15%, 60px);
-  height: 100%;
-  padding: 1em;
+  width: 50px;
+  height: 50px;
+  aspect-ratio: 1/1;
   //margin: 5% 1%;
   display: flex;
   justify-content: center;
   align-items: center;
   box-sizing: border-box;
-  font-size: 90%;
+  font-size: 150%;
 }
 
 .active {
@@ -319,8 +437,8 @@ body {
   flex-direction: column;
   align-items: center;
   width: 100%;
-  margin-bottom: 2em;
-  height: 20%;
+  margin-bottom: 1%;
+  min-height: 25%;
 }
 
 .keyboard-row {
@@ -336,7 +454,7 @@ body {
   background-color: var(--key-color);
   border-radius: 3px;
   font-size: 120%;
-  width: fit-content;
+  max-width: 60px;
   height: auto;
   display: flex;
   justify-content: center;
@@ -349,14 +467,21 @@ body {
 
 .gray {
   background-color: var(--square-gray);
+  border: none;
 }
 
 .green {
   background-color: var(--sqaure-green);
+  border: none;
 }
 
 .orange {
   background-color: var(--sqaure-orange);
+  border: none;
+}
+
+.key-color {
+  background-color: var(--key-color);
 }
 
 .difficulty-container {
@@ -367,6 +492,7 @@ body {
 
 .difficulty {
   border: 1px solid var(--border-color);
+  border-radius: 3px;
   padding: 1rem;
   margin: 0.5rem 0.5rem 5rem 0.5rem;
 }
@@ -378,7 +504,8 @@ body {
 .gameOver {
   z-index: 10;
   height: fit-content;
-  width: fit-content;
+  width: 80%;
+  font-size: 120%;
   margin: 0 auto;
   background-color: var(--border-color);
   position: absolute;
@@ -390,14 +517,20 @@ body {
   span {
     cursor: pointer;
   }
+
+  .strong {
+    cursor: auto;
+    font-weight: bold;
+    font-style: italic;
+  }
 }
 
 .login-form {
-  margin: 1rem;
-  padding-bottom: 1rem;
+  margin: 1%;
+  padding-bottom: 1%;
   display: flex;
   flex-direction: column;
-  justify-content: end;
+  justify-content: center;
 }
 
 .login-form-username, .login-form-password {
@@ -461,23 +594,27 @@ body {
 
 .login-form-info {
   text-align: center;
-  padding: 1rem;
+  vertical-align: center;
+  padding: 1%;
 }
 
 .login-form-submit {
   text-align: start;
 
   input, button {
-    margin: 0 0 0 1rem;
+    margin: 0 0 0 1%;
     color: var(--text-color);
     background-color: var(--key-color);
-    padding: 0.5rem;
+    padding: 0.5%;
     border-radius: 5px;
     border: none;
     cursor: pointer;
 
     span {
       margin: 0;
+      font-size: 100%;
+      display: block;
+      padding: 10%;
     }
 
     &:hover {
@@ -488,9 +625,10 @@ body {
   }
 
   span {
-    margin-left: 1rem;
+    margin-left: 1%;
     cursor: pointer;
     position: relative;
+    display: block;
 
     &:after {
       position: absolute;

@@ -75,11 +75,14 @@ const App = () => {
             if(localStorage.getItem("board")) {
                 setBoard(JSON.parse(localStorage.getItem("board")))
                 setDifficulty(JSON.parse(localStorage.getItem("difficulty")))
-                setAttempt(JSON.parse(localStorage.getItem("attempt")))
                 setKeyColor(JSON.parse(localStorage.getItem("keyColor")))
 
                 if (localStorage.getItem("game-over")) {
                     setGameOver(JSON.parse(localStorage.getItem("game-over")))
+                    setAttempt(JSON.parse(localStorage.getItem("attempt")))
+                } else {
+                    setAttempt(JSON.parse(localStorage.getItem("attempt"))+1)
+
                 }
             // }
         }else {
@@ -221,6 +224,19 @@ const App = () => {
         }
     };
 
+    const createScoreObject = (difficulty, attempts, keyboard) => {
+        const stats = {}
+
+        stats.max_tries = difficulty + 1
+        stats.taken_tries = attempts + 1
+
+        stats.found_letters = Object.values(keyboard).filter(color => color === 'green').length
+
+        console.log(stats)
+
+
+    }
+
     //function which unites API call and color feedback
     async function submitTry() {
         if (!gameOver[0]) {
@@ -244,14 +260,18 @@ const App = () => {
                             letter.color
                         );
                     });
-                    setKeyColor({ ...keyColor, ...keyColors });
+                    const newKeyColors = { ...keyColor, ...keyColors }
+
+                    setKeyColor(newKeyColors);
                     setGameOver([true, true]);
-                    setKeyColor({ ...keyColor, ...keyColors });
 
                     localStorage.setItem("game-over", JSON.stringify([true, true]))
                     localStorage.setItem("board", JSON.stringify(currBoard))
                     localStorage.setItem("keyColor", JSON.stringify({ ...keyColor, ...keyColors }))
+                    localStorage.setItem("attempt", JSON.stringify(currAttempt))
 
+
+                    createScoreObject(difficulty, currAttempt, newKeyColors)
                     return;
                 }
 
@@ -260,21 +280,15 @@ const App = () => {
                     let keyColors = {};
 
                     currBoard[currAttempt].forEach((letter, index) => {
-                        //if (letterInformation[index].count <= 1) {
                             letter.color = colorMapping(
                                 letterInformation[index]
                             );
 
-                        //console.log(letterInformation[index])
-                            keyColors[letter.letter] = colorOverride(
-                                keyColor[letter.letter],
-                                letter.color
-                            );
-                        //} else {
+                            keyColors[letter.letter] = colorOverride(keyColor[letter.letter], letter.color);
+
                             letter.index = index
                             letter.count = letterInformation[index].count
                             multipleLetter.push(letter);
-                        //}
                     });
 
                     multipleLetter = multipleLetter.filter(letter => letter.color !== 'gray')
@@ -285,15 +299,10 @@ const App = () => {
 
                     const uniqueLetters = [...new Set(allLetters)]
 
-                    console.log(uniqueLetters)
-
-                    //console.log(multipleLetter.filter(letter => letter.letter === 'S'))
-
                     uniqueLetters.forEach(unique => {
                         const uniqueLetterArray = multipleLetter.filter(letter => letter.letter === unique)
-                        //console.log(uniqueLetterArray)
+
                         uniqueLetterArray.sort((a, b) => a.color.localeCompare(b.color));
-                        console.log(uniqueLetterArray)
                         uniqueLetterArray.forEach((letter, index) => {
                             if (uniqueLetterArray.length > letter.count) {
                                 if (index <= letter.count -1) {
@@ -304,46 +313,35 @@ const App = () => {
                                     letter.color = 'gray'
                                 }
                             }
-
                         })
                     })
 
+                    const newKeyColors = { ...keyColor, ...keyColors }
+
                     if (currAttempt < difficulty) {
 
-                        // boardDiv.current.children[currAttempt].classList.toggle('submitted')
-
-                        // setTimeout(() => {
-                        //     boardDiv.current.children[currAttempt].classList.toggle('submitted')
-
-                            currBoard[currAttempt + 1][0].active = "active";
-                            setAttempt(currAttempt + 1);
-                            notInitialRender.current = true;
-                            setKeyColor({ ...keyColor, ...keyColors });
-                        // },1100)
+                        currBoard[currAttempt + 1][0].active = "active";
+                        setAttempt(currAttempt + 1);
+                        notInitialRender.current = true;
 
                     } else {
                         setGameOver([true, false]);
+                        createScoreObject(difficulty, currAttempt, newKeyColors)
                         localStorage.setItem("game-over", JSON.stringify([true, false]))
                     }
 
 
+                    setKeyColor(newKeyColors);
                     setPosition(0);
                     localStorage.setItem("board", JSON.stringify(currBoard))
-                    localStorage.setItem("attempt", JSON.stringify(currAttempt + 1))
-                    localStorage.setItem("keyColor", JSON.stringify({ ...keyColor, ...keyColors }))
+                    localStorage.setItem("attempt", JSON.stringify(currAttempt))
+                    localStorage.setItem("keyColor", JSON.stringify(newKeyColors))
 
-
-
-                    console.log(keyColors)
-                    console.log(keyColor)
-                    // console.log(keyBoardDiv.current)
                 } else {
-                    // alert("Choose a valid word");
                     boardDiv.current.children[currAttempt].classList.toggle('invalid')
                     setTimeout(() => {
                         boardDiv.current.children[currAttempt].classList.toggle('invalid')
                     }, 150)
-
                 }
             }
         }
@@ -376,10 +374,6 @@ const App = () => {
         return (
             <>
                 <Header loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} leaderboard={leaderboard} displayLeaderboard={displayLeaderboard} setDisplayLeaderboard={setDisplayLeaderboard}/>
-                {/*<Leaderboard*/}
-                {/*    leaderboard={leaderboard}*/}
-                {/*    displayLeaderboard={displayLeaderboard}*/}
-                {/*/>*/}
                 <Login jwtToken={jwtToken} setJwtToken={setJwtToken} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
             </>
         );
@@ -387,6 +381,11 @@ const App = () => {
         return (
             <>
                 <Header gameOver={gameOver[0]} gameOverModal={gameOverModal} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} leaderboard={leaderboard} displayLeaderboard={displayLeaderboard} setDisplayLeaderboard={setDisplayLeaderboard}/>
+                <div className="user">
+                    <div style={{display: loggedIn? 'block' : 'none'}}>
+                        <Login setKeyColor={setKeyColor} jwtToken={jwtToken} setJwtToken={setJwtToken} setDifficulty={setDifficulty}  loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
+                    </div>
+                </div>
                 <Leaderboard
                     leaderboard={leaderboard}
                     displayLeaderboard={displayLeaderboard}
@@ -398,7 +397,11 @@ const App = () => {
         return (
             <>
                 <Header gameOver={gameOver[0]} gameOverModal={gameOverModal} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} leaderboard={leaderboard} displayLeaderboard={displayLeaderboard} setDisplayLeaderboard={setDisplayLeaderboard}/>
-
+                <div className="user">
+                    <div style={{display: loggedIn? 'block' : 'none'}}>
+                        <Login setKeyColor={setKeyColor} jwtToken={jwtToken} setJwtToken={setJwtToken} setDifficulty={setDifficulty}  loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
+                    </div>
+                </div>
                 <AppContext.Provider
                     value={{
                         board,
@@ -425,13 +428,11 @@ const App = () => {
                             gameOverModal={gameOverModal}
                         />
                     ) : null}
-                    {/*{displayLeaderboard[0] ? (*/}
                         <Leaderboard
                             leaderboard={leaderboard}
                             displayLeaderboard={displayLeaderboard}
                             notInitialRender={notInitialRender}
                         />
-                    {/*) : null}*/}
                     <Board boardDiv={boardDiv}/>
                     <Keyboard />
                 </AppContext.Provider>

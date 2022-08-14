@@ -6,24 +6,32 @@ const Leaderboard = ({leaderboard, displayLeaderboard}) => {
 
     const stats = {
         "totalstats": {
+            "played": "4",
+            "won": "2",
             "hitrate":"0.2",
             "successrate": "0.9",
-            "totalscore": "200"
+            "avg_taken_tries": "4"
         },
         "easystats": {
-            "hitrate":"0.5",
-            "successrate": "0.2",
-            "totalscore": "167"
+            "played": "2",
+            "won": "2",
+            "hitrate":"0.99",
+            "successrate": "1",
+            "avg_taken_tries": "8"
         },
         "midstats": {
-            "hitrate":"0.25",
-            "successrate": "0.78",
-            "totalscore": "687"
+            "played": "42",
+            "won": "27",
+            "hitrate":"0.6",
+            "successrate": "0.27",
+            "avg_taken_tries": "2"
         },
         "hardstats": {
-            "hitrate":"0.9",
-            "successrate": "0.2",
-            "totalscore": "308"
+            "played": "73",
+            "won": "34",
+            "hitrate":"0.98",
+            "successrate": "0.92",
+            "avg_taken_tries": "6"
         }
 
     }
@@ -32,8 +40,8 @@ const Leaderboard = ({leaderboard, displayLeaderboard}) => {
         <div className={`leaderboard ${(displayLeaderboard) ? 'shown' : 'hidden'}`} ref={leaderboard}>
             <div className="leaderboard-content">
                 <div className={'leaderboard-content-scoreToday'}>
-                    <span className={'scoreToday-title'}>Your score today is:</span>
-                    <span className={'scoreToday-score'}>...</span>
+                    <span className={'scoreToday-title'}>Your score today is</span>
+                    <span className={'scoreToday-score'}>675</span>
                 </div>
                 <div className="leaderboard-content-statistics">
                     <Slider stats={stats}/>

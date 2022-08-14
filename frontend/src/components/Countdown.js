@@ -12,7 +12,7 @@ function Countdown() {
         }, 1000);
     }, []);
 
-    return <div className={"countdown"}>Time till next Word <br/>{clockState}</div>;
+    return <div className={"countdown"} style={clockState < "00:10:00" ? {color: "red"}:null}>{clockState}</div>;
 }
 
 export default Countdown;
