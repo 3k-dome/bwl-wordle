@@ -174,7 +174,7 @@ const App = () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ input: input }),
+                body: JSON.stringify({ word: input }),
             });
             const inputInformation = await response.json();
 
@@ -224,17 +224,32 @@ const App = () => {
         }
     };
 
-    const createScoreObject = (difficulty, attempts, keyboard) => {
+    const createScoreObject = (difficulty, attempts, board) => {
         const stats = {}
 
         stats.max_tries = difficulty + 1
         stats.taken_tries = attempts + 1
 
-        stats.found_letters = Object.values(keyboard).filter(color => color === 'green').length
+        console.log(board)
 
+        const letterAtIndexArray = []
+
+        for (let i = 0; i < board[0].length; i++) {
+            letterAtIndexArray.push(false)
+        }
+
+        for (let i = 0; i <= attempts; i++) {
+            board[i].forEach((letter, index) => {
+                if (letter.color === 'green') {
+                    letterAtIndexArray[index] = true
+                }
+            })
+        }
+
+        stats.found_letters = letterAtIndexArray.filter(letter => letter === true).length
+
+        // console.log(letterAtIndexArray)
         console.log(stats)
-
-
     }
 
     //function which unites API call and color feedback
@@ -246,10 +261,18 @@ const App = () => {
                 );
                 //is input a word?
                 const validInput = await apiResponse.is_valid;
+
+                console.log(validInput)
                 //is input word of the day
                 const rightWord = await apiResponse.is_word;
+
+                console.log(rightWord)
                 //letter information
                 const letterInformation = await apiResponse.letters;
+
+                const letterInformationArray = []
+
+                console.log(apiResponse)
 
                 if (rightWord) {
                     let keyColors = {};
@@ -271,7 +294,7 @@ const App = () => {
                     localStorage.setItem("attempt", JSON.stringify(currAttempt))
 
 
-                    createScoreObject(difficulty, currAttempt, newKeyColors)
+                    createScoreObject(difficulty, currAttempt, currBoard)
                     return;
                 }
 
@@ -326,7 +349,7 @@ const App = () => {
 
                     } else {
                         setGameOver([true, false]);
-                        createScoreObject(difficulty, currAttempt, newKeyColors)
+                        createScoreObject(difficulty, currAttempt, currBoard)
                         localStorage.setItem("game-over", JSON.stringify([true, false]))
                     }
 

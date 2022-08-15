@@ -504,7 +504,7 @@ body {
 .gameOver {
   z-index: 10;
   height: fit-content;
-  width: 80%;
+  width: min(400px, 80%);
   font-size: 120%;
   margin: 0 auto;
   background-color: var(--border-color);
@@ -531,13 +531,20 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  height: 10%;
+  @media only screen and (max-width: 768px) {
+    width: 100%;
+  }
+  @media only screen and (min-width: 769px) {
+    width: 50%;
+  }
 }
 
 .login-form-username, .login-form-password {
   position: relative;
-  width: 15rem;
-  height: 3rem;
-  margin: 1rem;
+  width: 35%;
+  height: 60%;
+  margin: 1%;
   background-color: var(--border-color);
   border-radius: 5px;
 
@@ -546,7 +553,7 @@ body {
     width: 100%;
     height: 100%;
     color: var(--text-color);
-    padding: 0.5rem;
+    padding: 5%;
     border: none;
     border-radius: 5px;
     background: transparent;
@@ -568,9 +575,9 @@ body {
     }
 
     &:focus + label, &:valid + label {
-      transform: translateX(-0.5rem);
-      transform: translateY(-0.5rem);
-      font-size: 0.75rem;
+      transform: translateX(-5%);
+      transform: translateY(-100%);
+      font-size: 70%;
       outline: none;
       border: none;
     }
@@ -578,10 +585,10 @@ body {
 
   label {
     position: absolute;
-    left: 0.5rem;
-    top: 0.5rem;
+    left: 5%;
+    top: 25%;
     color: var(--text-color);
-    font-size: 1.25rem;
+    font-size: 100%;
     z-index: 0;
     transition: all 300ms ease-in;
     user-select: none;
@@ -600,9 +607,10 @@ body {
 
 .login-form-submit {
   text-align: start;
+  width: 30%;
 
   input, button {
-    margin: 0 0 0 1%;
+    margin: 1%;
     color: var(--text-color);
     background-color: var(--key-color);
     padding: 0.5%;
@@ -629,6 +637,7 @@ body {
     cursor: pointer;
     position: relative;
     display: block;
+    width: fit-content;
 
     &:after {
       position: absolute;

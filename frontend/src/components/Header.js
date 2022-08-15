@@ -97,11 +97,11 @@ const Header = ({setKeyColor ,jwtToken, setJwtToken ,gameOver, gameOverModal, lo
 
         return (
             <div className={"header"}>
-                {loggedIn ? <div className={`hamburger`} ref={hamburger} onClick={changeLeaderboardDisplay}>
+                <div className={`hamburger`} ref={hamburger} style={{visibility: loggedIn ? "visible": "hidden"}} onClick={changeLeaderboardDisplay}>
                     <div className={'line'}></div>
                     <div className={'line'}></div>
                     <div className={'line'}></div>
-                </div> : null}
+                </div>
                 <div className="settings">
                     <div className="color-theme" ref={changeBtn} onClick={() => setDarkMode(!darkMode)}> </div>
                     {gameOver ?<div className="result" onClick={()=>gameOverModal.current.style.display = 'block'}><span className="material-symbols-outlined">leaderboard</span></div> : null}
