@@ -5,7 +5,7 @@ const Key = ({letter}) => {
         const {selectLetter,keyColor} = useContext(AppContext)
 
         return (
-            <div className={`key ${keyColor[letter]}`} onClick={() => selectLetter(letter)}>{letter}</div>
+            <div className={`key ${keyColor[letter]}`} onClick={() => selectLetter(letter)}><p>{letter}</p></div>
         );
 }
 

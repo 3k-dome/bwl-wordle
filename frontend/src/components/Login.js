@@ -144,7 +144,6 @@ const Login = ({setKeyColor ,jwtToken, setJwtToken ,port, loggedIn, setLoggedIn,
     }
 
     return (
-        <div>
             <form action="" className={'login-form'}>
                 <div className="login-form-info">{loginMsg}</div>
                 <div className="loggedIn" style={{display: !loggedIn? 'flex' : 'none'}}>
@@ -170,7 +169,6 @@ const Login = ({setKeyColor ,jwtToken, setJwtToken ,port, loggedIn, setLoggedIn,
 
 
             </form>
-        </div>
     );
 }
 

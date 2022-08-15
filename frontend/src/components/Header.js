@@ -2,7 +2,7 @@ import React, {useRef, useEffect, useState} from "react";
 import Countdown from "./Countdown";
 import Login from "./Login";
 
-const Header = ({setKeyColor ,jwtToken, setJwtToken ,gameOver, gameOverModal, loggedIn, loginMsg, setLoggedIn, port, setLoginMsg, setDifficulty}) => {
+const Header = ({setKeyColor ,jwtToken, setJwtToken ,gameOver, gameOverModal, loggedIn, loginMsg, setLoggedIn, port, setLoginMsg, setDifficulty, leaderboard, displayLeaderboard, setDisplayLeaderboard}) => {
 
     const changeBtn = useRef();
 
@@ -21,6 +21,11 @@ const Header = ({setKeyColor ,jwtToken, setJwtToken ,gameOver, gameOverModal, lo
                 false: 'rgb(224,224,224)',
                 true: 'rgb(18,18,19)'
                 },
+                    '--base-bg-gradient':
+                        {
+                            false: 'rgb(224,224,224, 0.5)',
+                            true: 'rgb(18,18,19, 0.9)'
+                        },
             '--text-color':
                 {false: 'rgb(18,18,19)',
                 true: 'white'
@@ -61,19 +66,44 @@ const Header = ({setKeyColor ,jwtToken, setJwtToken ,gameOver, gameOverModal, lo
 
     const [darkMode, setDarkMode] = useState(true)
 
+    const hamburger = useRef()
+
+    const changeLeaderboardDisplay = () => {
+        setDisplayLeaderboard(!displayLeaderboard)
+
+        if (displayLeaderboard) {
+            hamburger.current.children[1].style.transform = 'scale(1)'
+
+            hamburger.current.children[0].style.transform = 'rotate(0deg)'
+            hamburger.current.children[2].style.transform = 'rotate(0deg)'
+        } else {
+            hamburger.current.children[1].style.transform = 'scale(0)'
+
+            if (window.innerWidth <= 768) {
+                hamburger.current.children[0].style.transform = 'translateY(2.5pt) rotate(45deg) '
+                // hamburger.current.children[0].style.transform = ''
+                hamburger.current.children[2].style.transform = 'translateY(-6pt) rotate(-45deg)'
+            } else {
+                hamburger.current.children[0].style.transform = 'translateY(6pt) rotate(45deg) '
+                // hamburger.current.children[0].style.transform = ''
+                hamburger.current.children[2].style.transform = 'translateY(-6.5pt) rotate(-45deg)'
+            }
+
+        }
+    }
+
     useEffect(changeColor, [darkMode])
 
 
         return (
             <div className={"header"}>
-                <div className="user">
-                    <div style={{display: loggedIn? 'block' : 'none'}}>
-                        <Login setKeyColor={setKeyColor} jwtToken={jwtToken} setJwtToken={setJwtToken} setDifficulty={setDifficulty}  loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
-                    </div>
-
+                <div className={`hamburger`} ref={hamburger} style={{visibility: loggedIn ? "visible": "hidden"}} onClick={changeLeaderboardDisplay}>
+                    <div className={'line'}></div>
+                    <div className={'line'}></div>
+                    <div className={'line'}></div>
                 </div>
                 <div className="settings">
-                    <div className="color-theme" ref={changeBtn} onClick={() => setDarkMode(!darkMode)}></div>
+                    <div className="color-theme" ref={changeBtn} onClick={() => setDarkMode(!darkMode)}> </div>
                     {gameOver ?<div className="result" onClick={()=>gameOverModal.current.style.display = 'block'}><span className="material-symbols-outlined">leaderboard</span></div> : null}
                 </div>
                 <div className={'title'}>BWORDLE</div>
