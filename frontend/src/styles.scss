@@ -543,7 +543,7 @@ body {
 .login-form-username, .login-form-password {
   position: relative;
   width: 35%;
-  height: 60%;
+  height: 50%;
   margin: 1%;
   background-color: var(--border-color);
   border-radius: 5px;
@@ -586,7 +586,15 @@ body {
   label {
     position: absolute;
     left: 5%;
-    top: 25%;
+
+
+    @media only screen and (max-width: 768px){
+      top: 25%;
+    }
+
+    @media only screen and (min-width: 769px){
+      top: 30%;
+    }
     color: var(--text-color);
     font-size: 100%;
     z-index: 0;
@@ -596,7 +604,10 @@ body {
 }
 .loggedIn {
   width: 100%;
+  justify-content: center;
   align-items: center!important;
+  flex-wrap: wrap;
+  margin-bottom: 5%;
 }
 
 .login-form-info {
@@ -606,8 +617,13 @@ body {
 }
 
 .login-form-submit {
+  display: flex;
+  justify-content: start;
+  align-items: center;
   text-align: start;
-  width: 30%;
+  padding-left: 13.1%;
+  width: 100%;
+  height: 60%;
 
   input, button {
     margin: 1%;

@@ -1,18 +1,42 @@
-import React, {useContext} from "react";
+import React, {useContext, useEffect, useState} from "react";
 
-const DifficultySelection = ({setDifficulty}) => {
+const DifficultySelection = ({setDifficulty, port, availableDiffs, setDiffs}) => {
 
     const getDifficulty = (e) => {
         setDifficulty(e.target.dataset.attempts -1)
         localStorage.setItem("difficulty", JSON.stringify(e.target.dataset.attempts -1))
     }
 
+    useEffect(() => {
+        const getDiffUrl = port + '/game/difficulties'
+
+        async function getDifficulties() {
+
+            try {
+                const response = await fetch(getDiffUrl);
+                const data = await response.json()
+
+                console.log(data)
+
+                setDiffs(data)
+            } catch (error) {
+                console.log(error)
+            }
+
+        }
+
+        getDifficulties()
+    }, [])
+
+
+
     return (
         <div className={"difficulty-container"} onClick={getDifficulty}>
-            <div className={"difficulty"} data-attempts={3}>3 attempts</div>
-            <div className={"difficulty"} data-attempts={6}>6 attempts</div>
-            <div className={"difficulty"} data-attempts={9}>9 attempts</div>
-        </div>
+            {availableDiffs.map((diff, index) => {
+                   return <div key={index} className={"difficulty"} data-attempts={diff.tries}>{diff.tries} attempts ({diff.name})</div>
+                })
+            }
+        < /div>
     )
 }
 

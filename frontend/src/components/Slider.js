@@ -1,6 +1,6 @@
 import React,{useRef, useState}from "react";
 
-const Slider = ({stats}) => {
+const Slider = ({stats, difficulties}) => {
 
     const statsContainer = useRef()
 
@@ -42,41 +42,38 @@ const Slider = ({stats}) => {
                 })
             }
         }
-
-
-
-
-
     }
 
     return (
+
+        Object.values(stats).length > 0 ?
         <div className="statistics-slider">
             <div className="btn-before" onClick={() => moveSlider('back')} ><span className="material-symbols-outlined">chevron_left</span></div>
             <div ref={statsContainer} className="statistics-slider-content">
-                {Object.entries(stats).map((stat, index) => {
+                {Object.entries(stats).map((stat, index, key) => {
                     return (
                         <div className="statsByDiff" key={index} data-index={index}>
-                            <span className="title">{stat[0]}</span>
+                            <span className="title">{difficulties[stat[0] -1].name}</span>
                             <div className="statistics-content">
                                 <div className="avg-tries-container">
                                     <div className={'metric'}>Average taken tries</div>
-                                    <div className={Number(stat[1].avg_taken_tries) < 6 ? "value orange" : "value green"}>{stat[1].avg_taken_tries}</div>
+                                    <div className={Number(stat[1].avg_hit_rate) < 6 ? "value green" : "value orange"}>{stat[1].avg_hit_rate}</div>
                                 </div>
                                 <div className="hit-rate-container">
                                     <div className={'metric'}>Hit rate</div>
-                                    <div className={Number(stat[1].hitrate) < 0.5 ? "value orange" : "value green"}>{stat[1].hitrate}</div>
+                                    <div className={Number(stat[1].avg_hit_rate) < 0.5 ? "value orange" : "value green"}>{stat[1].avg_hit_rate}</div>
                                 </div>
                                 <div className="played-container">
                                     <div className={'metric'}>games played</div>
-                                    <div className={"value key-color"}>{stat[1].played}</div>
+                                    <div className={"value key-color"}>{stat[1].no_played}</div>
                                 </div>
                                 <div className="won-container">
                                     <div className={'metric'}>games won</div>
-                                    <div className="value key-color">{stat[1].won}</div>
+                                    <div className="value key-color">{stat[1].no_won}</div>
                                 </div>
                                 <div className="success-rate-container">
-                                    <div className={'metric'}>Success rate</div>
-                                    <div className={Number(stat[1].successrate) < 0.5 ? "value orange" : "value green"}>{stat[1].successrate}</div>
+                                    <div className={'metric'}>Total Score</div>
+                                    <div className={Number(stat[1].total_score) < 0.5 ? "value orange" : "value green"}>{stat[1].total_score}</div>
                                 </div>
 
                             </div>
@@ -94,7 +91,7 @@ const Slider = ({stats}) => {
                 })
                 }
             </div>
-        </div>
+        </div> : <div style={{textAlign: "center"}}>You must be logged in to see further statistics!</div>
     )
 }
 
