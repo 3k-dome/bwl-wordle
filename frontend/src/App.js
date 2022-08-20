@@ -19,7 +19,7 @@ export const AppContext = createContext();
 
 const App = () => {
     //backend server port
-    const port = "http://192.168.0.11:8000/api";
+    const port = "http://192.168.248.180:8000/api";
 
     //urls for api calls
     const worldLengthUrl = `${port}/game/new_game`;
@@ -51,6 +51,9 @@ const App = () => {
 
     const [availableDiffs, setDiffs] = useState([])
 
+    const [score, setScore] = useState({})
+
+    const [session, setSession] = useState()
 
     const boardDiv = useRef()
 
@@ -64,11 +67,12 @@ const App = () => {
     useEffect(() => {
         async function getWordLength() {
             const response = await fetch(worldLengthUrl);
-            const wordLength = await response.json();
+            const data = await response.json();
 
-            setLength((await wordLength.length) - 1);
+            setLength((await data.length) - 1);
 
-            return wordLength.length;
+            setSession(await data.session_end)
+
         }
         getWordLength()
     }, []);
@@ -282,6 +286,7 @@ const App = () => {
 
             const data = await response.json()
             console.log(data)
+            setScore(data)
         } catch (error) {
             console.log(error)
         }
@@ -453,14 +458,14 @@ const App = () => {
     if (!loggedIn) {
         return (
             <>
-                <Header loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} leaderboard={leaderboard} displayLeaderboard={displayLeaderboard} setDisplayLeaderboard={setDisplayLeaderboard}/>
+                <Header session={session} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} leaderboard={leaderboard} displayLeaderboard={displayLeaderboard} setDisplayLeaderboard={setDisplayLeaderboard}/>
                 <Login jwtToken={jwtToken} setJwtToken={setJwtToken} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
             </>
         );
     } else if (!difficulty) {
         return (
             <>
-                <Header gameOver={gameOver[0]} gameOverModal={gameOverModal} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} leaderboard={leaderboard} displayLeaderboard={displayLeaderboard} setDisplayLeaderboard={setDisplayLeaderboard}/>
+                <Header session={session} gameOver={gameOver[0]} gameOverModal={gameOverModal} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} leaderboard={leaderboard} displayLeaderboard={displayLeaderboard} setDisplayLeaderboard={setDisplayLeaderboard}/>
                 <div className="user">
                     <div style={{display: loggedIn? 'block' : 'none'}}>
                         <Login setKeyColor={setKeyColor} jwtToken={jwtToken} setJwtToken={setJwtToken} setDifficulty={setDifficulty}  loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
@@ -471,6 +476,7 @@ const App = () => {
                     displayLeaderboard={displayLeaderboard}
                     stats={stats}
                     difficulties={availableDiffs}
+                    score={score}
                 />
                 <DifficultySelection setDiffs={setDiffs} availableDiffs={availableDiffs} port={port} setDifficulty={setDifficulty} />
             </>
@@ -478,7 +484,7 @@ const App = () => {
     } else {
         return (
             <>
-                <Header gameOver={gameOver[0]} gameOverModal={gameOverModal} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} leaderboard={leaderboard} displayLeaderboard={displayLeaderboard} setDisplayLeaderboard={setDisplayLeaderboard}/>
+                <Header session={session} gameOver={gameOver[0]} gameOverModal={gameOverModal} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} leaderboard={leaderboard} displayLeaderboard={displayLeaderboard} setDisplayLeaderboard={setDisplayLeaderboard}/>
                 <div className="user">
                     <div style={{display: loggedIn? 'block' : 'none'}}>
                         <Login setKeyColor={setKeyColor} jwtToken={jwtToken} setJwtToken={setJwtToken} setDifficulty={setDifficulty}  loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
@@ -508,6 +514,7 @@ const App = () => {
                             attempts={JSON.parse(localStorage.getItem("game-over"))[0]? currAttempt + 1: currAttempt + 1}
                             won={gameOver[1]}
                             gameOverModal={gameOverModal}
+                            score={score}
                         />
                     ) : null}
                         <Leaderboard
@@ -516,6 +523,7 @@ const App = () => {
                             notInitialRender={notInitialRender}
                             stats={stats}
                             difficulties={availableDiffs}
+                            score={score}
                         />
                     <Board boardDiv={boardDiv}/>
                     <Keyboard />

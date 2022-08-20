@@ -55,27 +55,15 @@ const Slider = ({stats, difficulties}) => {
                         <div className="statsByDiff" key={index} data-index={index}>
                             <span className="title">{difficulties[stat[0] -1].name}</span>
                             <div className="statistics-content">
-                                <div className="avg-tries-container">
-                                    <div className={'metric'}>Average taken tries</div>
-                                    <div className={Number(stat[1].avg_hit_rate) < 6 ? "value green" : "value orange"}>{stat[1].avg_hit_rate}</div>
-                                </div>
-                                <div className="hit-rate-container">
-                                    <div className={'metric'}>Hit rate</div>
-                                    <div className={Number(stat[1].avg_hit_rate) < 0.5 ? "value orange" : "value green"}>{stat[1].avg_hit_rate}</div>
-                                </div>
-                                <div className="played-container">
-                                    <div className={'metric'}>games played</div>
-                                    <div className={"value key-color"}>{stat[1].no_played}</div>
-                                </div>
-                                <div className="won-container">
-                                    <div className={'metric'}>games won</div>
-                                    <div className="value key-color">{stat[1].no_won}</div>
-                                </div>
-                                <div className="success-rate-container">
-                                    <div className={'metric'}>Total Score</div>
-                                    <div className={Number(stat[1].total_score) < 0.5 ? "value orange" : "value green"}>{stat[1].total_score}</div>
-                                </div>
-
+                            {Object.entries(stat[1]).map(x => {
+                                const word = x[0].replaceAll('_', ' ')
+                                return (
+                                        <div>
+                                            <div className={'metric'}>{word}</div>
+                                            <div className='value'>{x[1]}</div>
+                                        </div>
+                                )
+                            })}
                             </div>
                         </div>
                     )
