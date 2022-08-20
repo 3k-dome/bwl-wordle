@@ -7,6 +7,7 @@ function Countdown({session, port}) {
 
     const reset = async () => {
         const response = await fetch(altPort + '/debug/set_word')
+        localStorage.clear()
         window.location.reload(false);
     }
 

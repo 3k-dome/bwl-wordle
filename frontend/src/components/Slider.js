@@ -60,7 +60,7 @@ const Slider = ({stats, difficulties}) => {
                                 return (
                                         <div>
                                             <div className={'metric'}>{word}</div>
-                                            <div className='value'>{x[1]}</div>
+                                            <div className='value'>{Number(x[1]).toFixed(2)}</div>
                                         </div>
                                 )
                             })}

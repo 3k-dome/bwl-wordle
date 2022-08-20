@@ -1,7 +1,7 @@
 import React, {useRef, useState, useEffect} from "react";
 import {AppContext} from "../App";
 
-const Login = ({setKeyColor ,jwtToken, setJwtToken ,port, loggedIn, setLoggedIn, loginMsg, setLoginMsg, setDifficulty}) => {
+const Login = ({setKeyColor ,jwtToken, setJwtToken ,port, loggedIn, setLoggedIn, loginMsg, setLoginMsg, setDifficulty, setScore}) => {
 
     const username = useRef()
     const password = useRef()
@@ -103,7 +103,10 @@ const Login = ({setKeyColor ,jwtToken, setJwtToken ,port, loggedIn, setLoggedIn,
             const response = await logoutFetch(JSON.parse(localStorage.getItem('jwt')))
             setJwtToken('')
             console.log(response)
+            setScore({})
         }
+
+        localStorage.clear()
 
 
         setLoggedIn(!loggedIn)

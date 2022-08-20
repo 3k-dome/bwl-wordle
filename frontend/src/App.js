@@ -145,11 +145,6 @@ const App = () => {
     //needed anymore?
     const notInitialRender = useRef(false);
 
-
-    // localStorage.setItem("key-board", JSON.stringify(keyBoardDiv.current))
-
-    // console.log(JSON.parse(localStorage.getItem("board")) === true)
-
     //function to add chosen letter to the board
     const selectLetter = (letter) => {
         //only add letter if space is available
@@ -245,6 +240,7 @@ const App = () => {
         }
     };
 
+    //creation of object which API can receive to calculate score
     const createScoreObject = (difficulty, attempts, board) => {
         const stats = {}
 
@@ -267,9 +263,12 @@ const App = () => {
 
         stats.found_letters = letterAtIndexArray.filter(letter => letter === true).length
 
+        console.log(stats)
+
         return stats
     }
 
+    //add score to user stats
     const addScore = async (stats) => {
         const scoreUrl = port + '/score/add'
 
@@ -291,6 +290,7 @@ const App = () => {
         }
     }
 
+    //get score of logge in user
     const fetchCurrentScore = async (currDiff) => {
         const scoreSummaryUrl = port + '/score/summary'
 
@@ -412,6 +412,11 @@ const App = () => {
                         setGameOver([true, false]);
                         createScoreObject(difficulty, currAttempt, currBoard)
                         localStorage.setItem("game-over", JSON.stringify([true, false]))
+                        await addScore(createScoreObject(difficulty, currAttempt, currBoard))
+
+                        const currStats = await fetchCurrentScore()
+
+                        setStats(currStats)
                     }
 
 
@@ -458,7 +463,7 @@ const App = () => {
         return (
             <>
                 <Header session={session} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} leaderboard={leaderboard} displayLeaderboard={displayLeaderboard} setDisplayLeaderboard={setDisplayLeaderboard}/>
-                <Login jwtToken={jwtToken} setJwtToken={setJwtToken} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
+                <Login setScore={setScore} jwtToken={jwtToken} setJwtToken={setJwtToken} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
             </>
         );
     } else if (!difficulty) {
@@ -467,7 +472,7 @@ const App = () => {
                 <Header session={session} gameOver={gameOver[0]} gameOverModal={gameOverModal} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} leaderboard={leaderboard} displayLeaderboard={displayLeaderboard} setDisplayLeaderboard={setDisplayLeaderboard}/>
                 <div className="user">
                     <div style={{display: loggedIn? 'block' : 'none'}}>
-                        <Login setKeyColor={setKeyColor} jwtToken={jwtToken} setJwtToken={setJwtToken} setDifficulty={setDifficulty}  loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
+                        <Login setScore={setScore} setKeyColor={setKeyColor} jwtToken={jwtToken} setJwtToken={setJwtToken} setDifficulty={setDifficulty}  loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
                     </div>
                 </div>
                 <Leaderboard
@@ -486,7 +491,7 @@ const App = () => {
                 <Header session={session} gameOver={gameOver[0]} gameOverModal={gameOverModal} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} leaderboard={leaderboard} displayLeaderboard={displayLeaderboard} setDisplayLeaderboard={setDisplayLeaderboard}/>
                 <div className="user">
                     <div style={{display: loggedIn? 'block' : 'none'}}>
-                        <Login setKeyColor={setKeyColor} jwtToken={jwtToken} setJwtToken={setJwtToken} setDifficulty={setDifficulty}  loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
+                        <Login setScore={setScore} setKeyColor={setKeyColor} jwtToken={jwtToken} setJwtToken={setJwtToken} setDifficulty={setDifficulty}  loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
                     </div>
                 </div>
                 <AppContext.Provider
@@ -514,6 +519,8 @@ const App = () => {
                             won={gameOver[1]}
                             gameOverModal={gameOverModal}
                             score={score}
+                            difficulties={availableDiffs}
+                            stats={stats}
                         />
                     ) : null}
                         <Leaderboard
