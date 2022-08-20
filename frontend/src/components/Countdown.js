@@ -1,18 +1,52 @@
 import React, { useEffect, useState } from "react";
 
-function Countdown() {
-    const [clockState, setClockState] = useState("--:--:--");
+function Countdown({session, port}) {
+    const [clockState, setClockState] = useState();
+
+    const altPort = port.replace('/api','')
+
+    const reset = async () => {
+        const response = await fetch(altPort + '/debug/set_word')
+        localStorage.clear()
+        window.location.reload(false);
+    }
 
     useEffect(() => {
         setInterval(() => {
             const date = new Date();
-            const refDate = new Date(`${date.getMonth() + 1} ${date.getDate()}, ${date.getFullYear()} 22:59:59`)
-            const timeDiff = new Date(refDate - date)
-            setClockState(timeDiff.toLocaleTimeString());
-        }, 1000);
-    }, []);
 
-    return <div className={"countdown"} style={clockState < "00:10:00" ? {color: "red"}:null}>{clockState}</div>;
+            if (session) {
+                const refDate = new Date(session.replace('GMT', ''))
+
+                const timeDiffSec = Math.floor((refDate.getTime() - date.getTime()) / 10**3)
+
+                const totalDiffMin = Math.floor(timeDiffSec /60)
+
+                const totalDiffHours = Math.floor(totalDiffMin/60)
+
+
+                const seconds = timeDiffSec - totalDiffMin * 60
+                const minutes = Math.floor((timeDiffSec - totalDiffHours * 60 * 60)/60)
+
+                const secAsString = seconds.toString().length < 2 ? '0' + seconds : seconds
+                const minAsString = minutes.toString().length < 2 ? '0' + minutes : minutes
+                const hourAsString = totalDiffHours.toString().length < 2 ? '0' + totalDiffHours : totalDiffHours
+
+                const timeString = `${hourAsString}:${minAsString}:${secAsString}`
+
+                if (timeString === '00:00:00') {
+
+                    reset()
+
+                    console.log('reload')
+                }
+
+                setClockState(timeString)
+            }
+        }, 1000);
+    }, [session]);
+
+    return <div className={`countdown {}`} style={clockState < "00:10:00" ? {color: 'var(--sqaure-orange)'}:null}>{clockState}</div>;
 }
 
 export default Countdown;

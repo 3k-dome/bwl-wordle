@@ -1,7 +1,7 @@
 import React, {useRef, useState, useEffect} from "react";
 import {AppContext} from "../App";
 
-const Login = ({setKeyColor ,jwtToken, setJwtToken ,port, loggedIn, setLoggedIn, loginMsg, setLoginMsg, setDifficulty}) => {
+const Login = ({setKeyColor ,jwtToken, setJwtToken ,port, loggedIn, setLoggedIn, loginMsg, setLoginMsg, setDifficulty, setScore}) => {
 
     const username = useRef()
     const password = useRef()
@@ -16,21 +16,20 @@ const Login = ({setKeyColor ,jwtToken, setJwtToken ,port, loggedIn, setLoggedIn,
     const login = async (e) => {
         e.preventDefault()
         const [response, status] = await loginFetch(username.current.value, password.current.value)
+        console.log(response)
 
         if (Number(status) === 400) {
-            const responseMsg = response.split(':')[1].slice(1,-1)
+            const responseMsg = response.msg
             setLoginMsg(responseMsg)
         } else if (Number(status) === 200) {
             setLoginMsg(`Logged in as: ${username.current.value}`)
-            setJwtToken(response)
+            setJwtToken(response.token)
             setLoggedIn(!loggedIn)
         }
     }
 
     useEffect(() => {
         const storeJWT = () => {
-            console.log(jwtToken)
-
             localStorage.setItem('jwt', JSON.stringify(jwtToken))
         }
 
@@ -41,7 +40,7 @@ const Login = ({setKeyColor ,jwtToken, setJwtToken ,port, loggedIn, setLoggedIn,
         e.preventDefault()
         const [response, status] = await registerFetch(username.current.value, password.current.value)
         if (Number(status) === 400) {
-            const responseMsg = response.split(':')[1].slice(1,-1)
+            const responseMsg = response.msg
             setLoginMsg(responseMsg)
         } else if (Number(status) === 200) {
             setLoginMsg(`User successfully registered!`)
@@ -62,7 +61,7 @@ const Login = ({setKeyColor ,jwtToken, setJwtToken ,port, loggedIn, setLoggedIn,
                     password: password
                 })
             })
-            const data = await response.text()
+            const data = await response.json()
             const status = response.status
             return (
                 [data, status]
@@ -85,7 +84,7 @@ const Login = ({setKeyColor ,jwtToken, setJwtToken ,port, loggedIn, setLoggedIn,
                     password: password
                 })
             })
-            const data = await response.text()
+            const data = await response.json()
             const status = response.status
             return (
                 [data, status]
@@ -104,7 +103,10 @@ const Login = ({setKeyColor ,jwtToken, setJwtToken ,port, loggedIn, setLoggedIn,
             const response = await logoutFetch(JSON.parse(localStorage.getItem('jwt')))
             setJwtToken('')
             console.log(response)
+            setScore({})
         }
+
+        localStorage.clear()
 
 
         setLoggedIn(!loggedIn)

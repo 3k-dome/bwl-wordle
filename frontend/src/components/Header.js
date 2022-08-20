@@ -2,7 +2,7 @@ import React, {useRef, useEffect, useState} from "react";
 import Countdown from "./Countdown";
 import Login from "./Login";
 
-const Header = ({setKeyColor ,jwtToken, setJwtToken ,gameOver, gameOverModal, loggedIn, loginMsg, setLoggedIn, port, setLoginMsg, setDifficulty, leaderboard, displayLeaderboard, setDisplayLeaderboard}) => {
+const Header = ({session ,setKeyColor ,jwtToken, setJwtToken ,gameOver, gameOverModal, loggedIn, loginMsg, setLoggedIn, port, setLoginMsg, setDifficulty, leaderboard, displayLeaderboard, setDisplayLeaderboard}) => {
 
     const changeBtn = useRef();
 
@@ -107,7 +107,7 @@ const Header = ({setKeyColor ,jwtToken, setJwtToken ,gameOver, gameOverModal, lo
                     {gameOver ?<div className="result" onClick={()=>gameOverModal.current.style.display = 'block'}><span className="material-symbols-outlined">leaderboard</span></div> : null}
                 </div>
                 <div className={'title'}>BWORDLE</div>
-                <Countdown/>
+                <Countdown session={session} port={port}/>
             </div>
         )
 }

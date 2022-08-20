@@ -19,11 +19,11 @@ export const AppContext = createContext();
 
 const App = () => {
     //backend server port
-    const port = "http://localhost:8000";
+    const port = "http://192.168.0.11:8000/api";
 
     //urls for api calls
-    const worldLengthUrl = `${port}/api/game/new_game`;
-    const validateInputUrl = `${port}/api/game/validate_input`;
+    const worldLengthUrl = `${port}/game/new_game`;
+    const validateInputUrl = `${port}/game/validate_input`;
 
     const [board, setBoard] = useState([]);
 
@@ -47,6 +47,14 @@ const App = () => {
 
     const [displayLeaderboard, setDisplayLeaderboard] = useState(false)
 
+    const [stats, setStats] = useState([])
+
+    const [availableDiffs, setDiffs] = useState([])
+
+    const [score, setScore] = useState({})
+
+    const [session, setSession] = useState()
+
     const boardDiv = useRef()
 
     const keyBoardDiv = useRef()
@@ -59,11 +67,11 @@ const App = () => {
     useEffect(() => {
         async function getWordLength() {
             const response = await fetch(worldLengthUrl);
-            const wordLength = await response.json();
+            const data = await response.json();
 
-            setLength((await wordLength.length) - 1);
+            setLength((await data.length) - 1);
 
-            return wordLength.length;
+            setSession(await data.session_end)
         }
         getWordLength()
     }, []);
@@ -118,16 +126,24 @@ const App = () => {
         createGame();
     }, [difficulty]);
 
+    useEffect( () => {
+        if (jwtToken !== '') {
+            async function getAndSetStats () {
+                const currStats = await fetchCurrentScore()
+                setStats(currStats)
+
+                console.log(currStats)
+            }
+
+            getAndSetStats()
+        }
+    }, [jwtToken])
+
     const currBoard = [...board];
     const currPosition = position;
     const currAttempt = attempt;
     //needed anymore?
     const notInitialRender = useRef(false);
-
-
-    // localStorage.setItem("key-board", JSON.stringify(keyBoardDiv.current))
-
-    // console.log(JSON.parse(localStorage.getItem("board")) === true)
 
     //function to add chosen letter to the board
     const selectLetter = (letter) => {
@@ -224,13 +240,12 @@ const App = () => {
         }
     };
 
+    //creation of object which API can receive to calculate score
     const createScoreObject = (difficulty, attempts, board) => {
         const stats = {}
 
         stats.max_tries = difficulty + 1
         stats.taken_tries = attempts + 1
-
-        console.log(board)
 
         const letterAtIndexArray = []
 
@@ -248,8 +263,52 @@ const App = () => {
 
         stats.found_letters = letterAtIndexArray.filter(letter => letter === true).length
 
-        // console.log(letterAtIndexArray)
         console.log(stats)
+
+        return stats
+    }
+
+    //add score to user stats
+    const addScore = async (stats) => {
+        const scoreUrl = port + '/score/add'
+
+        try {
+            const response = await fetch(scoreUrl, {
+                method: 'post',
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${jwtToken}`
+                },
+                body: JSON.stringify(stats)
+            })
+
+            const data = await response.json()
+            console.log(data)
+            setScore(data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    //get score of logge in user
+    const fetchCurrentScore = async (currDiff) => {
+        const scoreSummaryUrl = port + '/score/summary'
+
+        try {
+            const response = await fetch(scoreSummaryUrl, {
+                method: 'get',
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${jwtToken}`
+                },
+            })
+            const data = await response.json()
+            console.log(data)
+
+            return await data
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     //function which unites API call and color feedback
@@ -262,11 +321,9 @@ const App = () => {
                 //is input a word?
                 const validInput = await apiResponse.is_valid;
 
-                console.log(validInput)
                 //is input word of the day
                 const rightWord = await apiResponse.is_word;
 
-                console.log(rightWord)
                 //letter information
                 const letterInformation = await apiResponse.letters;
 
@@ -293,8 +350,12 @@ const App = () => {
                     localStorage.setItem("keyColor", JSON.stringify({ ...keyColor, ...keyColors }))
                     localStorage.setItem("attempt", JSON.stringify(currAttempt))
 
+                    await addScore(createScoreObject(difficulty, currAttempt, currBoard))
 
-                    createScoreObject(difficulty, currAttempt, currBoard)
+                    const currStats = await fetchCurrentScore()
+
+                    setStats(currStats)
+
                     return;
                 }
 
@@ -351,6 +412,11 @@ const App = () => {
                         setGameOver([true, false]);
                         createScoreObject(difficulty, currAttempt, currBoard)
                         localStorage.setItem("game-over", JSON.stringify([true, false]))
+                        await addScore(createScoreObject(difficulty, currAttempt, currBoard))
+
+                        const currStats = await fetchCurrentScore()
+
+                        setStats(currStats)
                     }
 
 
@@ -396,33 +462,36 @@ const App = () => {
     if (!loggedIn) {
         return (
             <>
-                <Header loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} leaderboard={leaderboard} displayLeaderboard={displayLeaderboard} setDisplayLeaderboard={setDisplayLeaderboard}/>
-                <Login jwtToken={jwtToken} setJwtToken={setJwtToken} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
+                <Header session={session} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} leaderboard={leaderboard} displayLeaderboard={displayLeaderboard} setDisplayLeaderboard={setDisplayLeaderboard}/>
+                <Login setScore={setScore} jwtToken={jwtToken} setJwtToken={setJwtToken} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
             </>
         );
     } else if (!difficulty) {
         return (
             <>
-                <Header gameOver={gameOver[0]} gameOverModal={gameOverModal} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} leaderboard={leaderboard} displayLeaderboard={displayLeaderboard} setDisplayLeaderboard={setDisplayLeaderboard}/>
+                <Header session={session} gameOver={gameOver[0]} gameOverModal={gameOverModal} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} leaderboard={leaderboard} displayLeaderboard={displayLeaderboard} setDisplayLeaderboard={setDisplayLeaderboard}/>
                 <div className="user">
                     <div style={{display: loggedIn? 'block' : 'none'}}>
-                        <Login setKeyColor={setKeyColor} jwtToken={jwtToken} setJwtToken={setJwtToken} setDifficulty={setDifficulty}  loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
+                        <Login setScore={setScore} setKeyColor={setKeyColor} jwtToken={jwtToken} setJwtToken={setJwtToken} setDifficulty={setDifficulty}  loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
                     </div>
                 </div>
                 <Leaderboard
                     leaderboard={leaderboard}
                     displayLeaderboard={displayLeaderboard}
+                    stats={stats}
+                    difficulties={availableDiffs}
+                    score={score}
                 />
-                <DifficultySelection setDifficulty={setDifficulty} />
+                <DifficultySelection setDiffs={setDiffs} availableDiffs={availableDiffs} port={port} setDifficulty={setDifficulty} />
             </>
         );
     } else {
         return (
             <>
-                <Header gameOver={gameOver[0]} gameOverModal={gameOverModal} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} leaderboard={leaderboard} displayLeaderboard={displayLeaderboard} setDisplayLeaderboard={setDisplayLeaderboard}/>
+                <Header session={session} gameOver={gameOver[0]} gameOverModal={gameOverModal} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} leaderboard={leaderboard} displayLeaderboard={displayLeaderboard} setDisplayLeaderboard={setDisplayLeaderboard}/>
                 <div className="user">
                     <div style={{display: loggedIn? 'block' : 'none'}}>
-                        <Login setKeyColor={setKeyColor} jwtToken={jwtToken} setJwtToken={setJwtToken} setDifficulty={setDifficulty}  loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
+                        <Login setScore={setScore} setKeyColor={setKeyColor} jwtToken={jwtToken} setJwtToken={setJwtToken} setDifficulty={setDifficulty}  loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
                     </div>
                 </div>
                 <AppContext.Provider
@@ -449,12 +518,18 @@ const App = () => {
                             attempts={JSON.parse(localStorage.getItem("game-over"))[0]? currAttempt + 1: currAttempt + 1}
                             won={gameOver[1]}
                             gameOverModal={gameOverModal}
+                            score={score}
+                            difficulties={availableDiffs}
+                            stats={stats}
                         />
                     ) : null}
                         <Leaderboard
                             leaderboard={leaderboard}
                             displayLeaderboard={displayLeaderboard}
                             notInitialRender={notInitialRender}
+                            stats={stats}
+                            difficulties={availableDiffs}
+                            score={score}
                         />
                     <Board boardDiv={boardDiv}/>
                     <Keyboard />
