@@ -107,7 +107,7 @@ const Header = ({session ,setKeyColor ,jwtToken, setJwtToken ,gameOver, gameOver
                     {gameOver ?<div className="result" onClick={()=>gameOverModal.current.style.display = 'block'}><span className="material-symbols-outlined">leaderboard</span></div> : null}
                 </div>
                 <div className={'title'}>BWORDLE</div>
-                <Countdown session={session}/>
+                <Countdown session={session} port={port}/>
             </div>
         )
 }

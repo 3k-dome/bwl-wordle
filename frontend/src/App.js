@@ -19,7 +19,7 @@ export const AppContext = createContext();
 
 const App = () => {
     //backend server port
-    const port = "http://192.168.248.180:8000/api";
+    const port = "http://192.168.0.11:8000/api";
 
     //urls for api calls
     const worldLengthUrl = `${port}/game/new_game`;
@@ -72,7 +72,6 @@ const App = () => {
             setLength((await data.length) - 1);
 
             setSession(await data.session_end)
-
         }
         getWordLength()
     }, []);
