@@ -26,6 +26,7 @@ body {
   width: 100%;
   background: linear-gradient(var(--base-bg-color), var(--base-bg-gradient));
   margin: 0;
+
 }
 
 #root {
@@ -34,6 +35,10 @@ body {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  position: relative;
+  overflow: hidden;
+  -webkit-user-drag: none;
+  touch-action: none;
 }
 
 .header {
@@ -44,6 +49,98 @@ body {
   justify-content: space-around;
   align-items: center;
 
+  .info {
+    position: absolute;
+    top: 10%;
+    right: 0;
+    height: 90%;
+    @media only screen and (max-width: 768px){
+      width: 100%;
+    }
+    @media only screen and (min-width: 769px){
+      width: 45%;
+    }
+    z-index: 100;
+    overflow-x: hidden;
+    transform: translateX(95%);
+    transition: all 0.3s ease-in-out;
+
+    .info-content-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      flex-grow: 1;
+
+      .expand-btn {
+        width: 5%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        text-align: center;
+
+        span {
+          background-color: var(--base-bg-color);
+          border-radius: 3px 0 0 3px;
+          padding: 10% 5%;
+          width: 100%;
+          font-size: 100%;
+          cursor: pointer;
+        }
+      }
+
+      .info-content {
+        width: 95%;
+        height: 100%;
+        background-color: var(--base-bg-color);
+        padding: 2%;
+        overflow-y: scroll;
+
+        &::-webkit-scrollbar {
+          width: 5px;
+        }
+
+        &::-webkit-scrollbar-track {
+          background: var(--base-bg-gradient);
+        }
+
+        /* Handle */
+        &::-webkit-scrollbar-thumb {
+          background: var(--border-color);
+          border-radius: 10px;
+        }
+
+        /* Handle on hover */
+        &::-webkit-scrollbar-thumb:hover {
+          background: #555;
+        }
+
+        .introduction {
+          border-bottom: 1px solid var(--border-color);
+        }
+
+        .examples {
+          margin: 5% 0;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-evenly;
+          min-height: fit-content;
+          & > div {
+            padding: 2% 0;
+            .examples-row {
+              display: flex;
+              gap: 1%;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.underline {
+  text-decoration: underline;
+  font-size: 101%;
 }
 
 
@@ -127,14 +224,12 @@ body {
 
   @media only screen and (max-width: 768px) {
     width: 100%;
-    border-bottom: 2px solid var(--border-color);
     top: 10%;
     left: 0;
   }
 
   @media only screen and (min-width: 769px) {
     height: 90%;
-    border-right: 2px solid var(--border-color);
     left: -40%;
     top: 10%;
     width: 40%;
@@ -143,7 +238,7 @@ body {
 
   visibility: hidden;
   position: absolute;
-  z-index: 20;
+  z-index: 101;
   overflow: hidden;
   background-color: var(--base-bg-color);
 
