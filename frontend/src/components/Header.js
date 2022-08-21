@@ -1,6 +1,7 @@
 import React, {useRef, useEffect, useState} from "react";
 import Countdown from "./Countdown";
 import Login from "./Login";
+import Info from "./Info";
 
 const Header = ({session ,setKeyColor ,jwtToken, setJwtToken ,gameOver, gameOverModal, loggedIn, loginMsg, setLoggedIn, port, setLoginMsg, setDifficulty, leaderboard, displayLeaderboard, setDisplayLeaderboard}) => {
 
@@ -97,6 +98,7 @@ const Header = ({session ,setKeyColor ,jwtToken, setJwtToken ,gameOver, gameOver
 
         return (
             <div className={"header"}>
+                <Info/>
                 <div className={`hamburger`} ref={hamburger} style={{visibility: loggedIn ? "visible": "hidden"}} onClick={changeLeaderboardDisplay}>
                     <div className={'line'}></div>
                     <div className={'line'}></div>
