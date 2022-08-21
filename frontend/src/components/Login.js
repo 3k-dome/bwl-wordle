@@ -75,6 +75,11 @@ const Login = ({setSaveGame ,setGameOver ,setBoard ,setAttempt ,setKeyColor ,jwt
             } else {
                 console.log('No save game found')
                 setBoard([])
+                setKeyColor({})
+                setDifficulty()
+                setAttempt(0)
+                setGameOver([false, false])
+                localStorage.clear()
             }
         }
 

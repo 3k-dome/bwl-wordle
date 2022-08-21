@@ -7,7 +7,7 @@ const GameOver = ({attempts, won, gameOverModal, score, difficulties, stats}) =>
         <div className={'gameOver'} ref={gameOverModal}>
             <span className="material-symbols-outlined" onClick={(e) => e.target.parentElement.style.display = 'none'}>close</span>
             {won ? <p>Congrats! You found the word!</p> : <p>You didn't got today's word. More luck next time!</p>}
-            {!score.msg?
+            {!score.msg && score.score > 0 ?
                 <>
                     <p>You needed <span className={'strong'}>{attempts} </span> attempt(s)</p>
                     <p>You earned <span className={'strong'}>{score.score} </span> points</p>
