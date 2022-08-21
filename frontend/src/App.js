@@ -553,7 +553,7 @@ const App = () => {
                 </div>
                 <Leaderboard leaderboard={leaderboard} displayLeaderboard={displayLeaderboard} stats={stats} difficulties={availableDiffs} score={score} jwt={jwtToken}
                 />
-                <DifficultySelection setDiffs={setDiffs} availableDiffs={availableDiffs} port={port} setDifficulty={setDifficulty} />
+                <DifficultySelection wordLength={length + 1} setDiffs={setDiffs} availableDiffs={availableDiffs} port={port} setDifficulty={setDifficulty} />
             </>
         );
     } else {
