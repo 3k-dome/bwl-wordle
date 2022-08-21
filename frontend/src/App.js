@@ -55,6 +55,8 @@ const App = () => {
 
     const [session, setSession] = useState()
 
+    const [saveGame, setSaveGame] = useState()
+
     const boardDiv = useRef()
 
     const keyBoardDiv = useRef()
@@ -76,10 +78,38 @@ const App = () => {
         getWordLength()
     }, []);
 
-    //create the board when user sets difficulty
+
     useEffect(() => {
-        function createGame() {
+        const getDiffUrl = port + '/game/difficulties'
+
+        async function getDifficulties() {
+
+            try {
+                const response = await fetch(getDiffUrl);
+                const data = await response.json()
+
+                console.log(data)
+
+                setDiffs(data)
+            } catch (error) {
+                console.log(error)
+            }
+
+        }
+
+        getDifficulties()
+    }, [])
+
+    //create the board when user sets difficulty
+    useEffect( () => {
+        if (!saveGame) {
+
+            console.log('new creation')
+            console.log(saveGame)
+
+        async function createGame() {
         // if (localStorage.getItem("jwt")) {
+
             if(localStorage.getItem("board")) {
                 setBoard(JSON.parse(localStorage.getItem("board")))
                 setDifficulty(JSON.parse(localStorage.getItem("difficulty")))
@@ -90,15 +120,11 @@ const App = () => {
                     setAttempt(JSON.parse(localStorage.getItem("attempt")))
                 } else {
                     setAttempt(JSON.parse(localStorage.getItem("attempt"))+1)
-
                 }
             // }
         }else {
             //board size defined by difficulty and word length
-            // console.log(JSON.parse(localStorage.getItem("board")).length)
-            console.log('User')
             const boardSize = [difficulty, length];
-            console.log(boardSize)
             const tempBoard = [];
 
             //create board object as storage for information
@@ -117,26 +143,31 @@ const App = () => {
                 }
             }
             setBoard(tempBoard);
+            }
         }
-
-
-
             // return tempBoard;
-        }
+
         createGame();
+            console.log(board)
+
+        } else {
+            console.log('loaded')
+        }
     }, [difficulty]);
 
-    useEffect( () => {
+    useEffect(  () => {
         if (jwtToken !== '') {
             async function getAndSetStats () {
                 const currStats = await fetchCurrentScore()
                 setStats(currStats)
 
                 console.log(currStats)
-            }
 
+            }
             getAndSetStats()
         }
+
+
     }, [jwtToken])
 
     const currBoard = [...board];
@@ -284,31 +315,71 @@ const App = () => {
 
             const data = await response.json()
             console.log(data)
+            localStorage.setItem("score", JSON.stringify(data))
             setScore(data)
+            console.log(score)
         } catch (error) {
             console.log(error)
+            setScore([])
         }
     }
 
     //get score of logge in user
-    const fetchCurrentScore = async (currDiff) => {
-        const scoreSummaryUrl = port + '/score/summary'
+    const fetchCurrentScore = async () => {
+        if (jwtToken) {
+            const scoreSummaryUrl = port + '/score/summary'
+
+            try {
+                const response = await fetch(scoreSummaryUrl, {
+                    method: 'get',
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${jwtToken}`
+                    },
+                })
+                const data = await response.json()
+
+                return await data
+            } catch (error) {
+                console.log(error)
+            }
+        }
+    }
+
+    const putStateToDB = async() => {
+        const state = {}
+
+        for (let i = 0; i < localStorage.length; i++){
+            if (localStorage.key(i) !== 'jwt') {
+                state[localStorage.key(i)] = JSON.parse(localStorage.getItem(localStorage.key(i)))
+            }
+        }
+
+        console.log(state)
+
+        const body = JSON.stringify(state).replaceAll("\\", "")
+
+        const stateToDbUrl = port+ '/state/save'
 
         try {
-            const response = await fetch(scoreSummaryUrl, {
-                method: 'get',
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${jwtToken}`
-                },
-            })
-            const data = await response.json()
-            console.log(data)
+            if (jwtToken !== '') {
+                const response = await fetch(stateToDbUrl, {
+                    method: 'post',
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${jwtToken}`
+                    },
+                    body: body
+                })
+                const data = await response.json()
 
-            return await data
+                console.log(data.msg)
+            }
         } catch (error) {
             console.log(error)
         }
+
+
     }
 
     //function which unites API call and color feedback
@@ -350,11 +421,14 @@ const App = () => {
                     localStorage.setItem("keyColor", JSON.stringify({ ...keyColor, ...keyColors }))
                     localStorage.setItem("attempt", JSON.stringify(currAttempt))
 
+
                     await addScore(createScoreObject(difficulty, currAttempt, currBoard))
 
                     const currStats = await fetchCurrentScore()
 
                     setStats(currStats)
+
+                    await putStateToDB()
 
                     return;
                 }
@@ -426,6 +500,8 @@ const App = () => {
                     localStorage.setItem("attempt", JSON.stringify(currAttempt))
                     localStorage.setItem("keyColor", JSON.stringify(newKeyColors))
 
+                    await putStateToDB()
+
                 } else {
                     boardDiv.current.children[currAttempt].classList.toggle('invalid')
                     setTimeout(() => {
@@ -463,7 +539,7 @@ const App = () => {
         return (
             <>
                 <Header session={session} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} leaderboard={leaderboard} displayLeaderboard={displayLeaderboard} setDisplayLeaderboard={setDisplayLeaderboard}/>
-                <Login setScore={setScore} jwtToken={jwtToken} setJwtToken={setJwtToken} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
+                <Login  setSaveGame={setSaveGame} setGameOver={setGameOver} setBoard={setBoard} setScore={setScore} jwtToken={jwtToken} setJwtToken={setJwtToken} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
             </>
         );
     } else if (!difficulty) {
@@ -472,15 +548,10 @@ const App = () => {
                 <Header session={session} gameOver={gameOver[0]} gameOverModal={gameOverModal} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} leaderboard={leaderboard} displayLeaderboard={displayLeaderboard} setDisplayLeaderboard={setDisplayLeaderboard}/>
                 <div className="user">
                     <div style={{display: loggedIn? 'block' : 'none'}}>
-                        <Login setScore={setScore} setKeyColor={setKeyColor} jwtToken={jwtToken} setJwtToken={setJwtToken} setDifficulty={setDifficulty}  loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
+                        <Login setSaveGame={setSaveGame} setGameOver={setGameOver} setBoard={setBoard} setAttempt={setAttempt} setScore={setScore} setKeyColor={setKeyColor} jwtToken={jwtToken} setJwtToken={setJwtToken} setDifficulty={setDifficulty}  loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
                     </div>
                 </div>
-                <Leaderboard
-                    leaderboard={leaderboard}
-                    displayLeaderboard={displayLeaderboard}
-                    stats={stats}
-                    difficulties={availableDiffs}
-                    score={score}
+                <Leaderboard leaderboard={leaderboard} displayLeaderboard={displayLeaderboard} stats={stats} difficulties={availableDiffs} score={score} jwt={jwtToken}
                 />
                 <DifficultySelection setDiffs={setDiffs} availableDiffs={availableDiffs} port={port} setDifficulty={setDifficulty} />
             </>
@@ -491,45 +562,19 @@ const App = () => {
                 <Header session={session} gameOver={gameOver[0]} gameOverModal={gameOverModal} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} leaderboard={leaderboard} displayLeaderboard={displayLeaderboard} setDisplayLeaderboard={setDisplayLeaderboard}/>
                 <div className="user">
                     <div style={{display: loggedIn? 'block' : 'none'}}>
-                        <Login setScore={setScore} setKeyColor={setKeyColor} jwtToken={jwtToken} setJwtToken={setJwtToken} setDifficulty={setDifficulty}  loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
+                        <Login setSaveGame={setSaveGame} setGameOver={setGameOver} setBoard={setBoard} setAttempt={setAttempt} setScore={setScore} setKeyColor={setKeyColor} jwtToken={jwtToken} setJwtToken={setJwtToken} setDifficulty={setDifficulty}  loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
                     </div>
                 </div>
                 <AppContext.Provider
-                    value={{
-                        board,
-                        setBoard,
-                        position,
-                        setPosition,
-                        attempt,
-                        setAttempt,
-                        selectLetter,
-                        handleKeyboard,
-                        delLetter,
-                        submitTry,
-                        difficulty,
-                        notInitialRender,
-                        keyColor,
-                        keyBoardDiv,
-                        boardDiv
+                    value={{board, setBoard, position, setPosition, attempt, setAttempt, selectLetter, handleKeyboard, delLetter, submitTry, difficulty, notInitialRender, keyColor, keyBoardDiv, boardDiv
                     }}
                 >
                     {gameOver[0] ? (
                         <GameOver
-                            attempts={JSON.parse(localStorage.getItem("game-over"))[0]? currAttempt + 1: currAttempt + 1}
-                            won={gameOver[1]}
-                            gameOverModal={gameOverModal}
-                            score={score}
-                            difficulties={availableDiffs}
-                            stats={stats}
+                            attempts={currAttempt + 1} won={gameOver[1]} gameOverModal={gameOverModal} score={score} difficulties={availableDiffs} stats={stats}
                         />
                     ) : null}
-                        <Leaderboard
-                            leaderboard={leaderboard}
-                            displayLeaderboard={displayLeaderboard}
-                            notInitialRender={notInitialRender}
-                            stats={stats}
-                            difficulties={availableDiffs}
-                            score={score}
+                        <Leaderboard leaderboard={leaderboard} displayLeaderboard={displayLeaderboard} notInitialRender={notInitialRender} stats={stats} difficulties={availableDiffs} score={score} jwt={jwtToken}
                         />
                     <Board boardDiv={boardDiv}/>
                     <Keyboard />

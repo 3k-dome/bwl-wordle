@@ -1,7 +1,7 @@
 import React, {useRef, useState, useEffect} from "react";
 import {AppContext} from "../App";
 
-const Login = ({setKeyColor ,jwtToken, setJwtToken ,port, loggedIn, setLoggedIn, loginMsg, setLoginMsg, setDifficulty, setScore}) => {
+const Login = ({setSaveGame ,setGameOver ,setBoard ,setAttempt ,setKeyColor ,jwtToken, setJwtToken ,port, loggedIn, setLoggedIn, loginMsg, setLoginMsg, setDifficulty, setScore}) => {
 
     const username = useRef()
     const password = useRef()
@@ -28,12 +28,63 @@ const Login = ({setKeyColor ,jwtToken, setJwtToken ,port, loggedIn, setLoggedIn,
         }
     }
 
+    const checkForState = async () => {
+        if (jwtToken !== '') {
+            try {
+                const response = await fetch(port + '/state/load', {
+                    method: 'get',
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${jwtToken}`
+                    }
+                });
+
+                const data = await response.json()
+                const status = response.status
+
+                return [data, status]
+            } catch (error) {
+                return 'No save game found'
+            }
+
+        }
+    }
+
     useEffect(() => {
         const storeJWT = () => {
             localStorage.setItem('jwt', JSON.stringify(jwtToken))
         }
 
+        const setSate = async () => {
+            const [data, status] = await checkForState();
+
+            if (status === 200) {
+                setBoard(data.board)
+                setSaveGame(true)
+                setScore(data.score)
+                setDifficulty(data.difficulty)
+
+                setKeyColor(data.keyColor)
+
+                if (data['game-over']) {
+                    setGameOver(data['game-over'])
+                    setAttempt(data.attempt)
+                } else {
+                    setAttempt(data.attempt+1)
+                }
+            } else {
+                console.log('No save game found')
+                setBoard([])
+                setKeyColor({})
+                setDifficulty()
+                setAttempt(0)
+                setGameOver([false, false])
+                localStorage.clear()
+            }
+        }
+
         storeJWT()
+        setSate()
     }, [jwtToken])
 
     const register = async (e) => {
@@ -101,25 +152,12 @@ const Login = ({setKeyColor ,jwtToken, setJwtToken ,port, loggedIn, setLoggedIn,
 
         if (loginMsg !== 'Guest') {
             const response = await logoutFetch(JSON.parse(localStorage.getItem('jwt')))
-            setJwtToken('')
             console.log(response)
-            setScore({})
         }
 
         localStorage.clear()
 
-
-        setLoggedIn(!loggedIn)
-        setLoginMsg('')
-
-
-        if (setDifficulty) {
-            setDifficulty(false)
-        }
-
-        if (setKeyColor) {
-            setKeyColor({})
-        }
+        window.location.reload(false);
     }
 
     const logoutFetch = async (token) => {
