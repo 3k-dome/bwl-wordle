@@ -7,28 +7,6 @@ const DifficultySelection = ({setDifficulty, port, availableDiffs, setDiffs}) =>
         localStorage.setItem("difficulty", JSON.stringify(e.target.dataset.attempts -1))
     }
 
-    useEffect(() => {
-        const getDiffUrl = port + '/game/difficulties'
-
-        async function getDifficulties() {
-
-            try {
-                const response = await fetch(getDiffUrl);
-                const data = await response.json()
-
-                console.log(data)
-
-                setDiffs(data)
-            } catch (error) {
-                console.log(error)
-            }
-
-        }
-
-        getDifficulties()
-    }, [])
-
-
 
     return (
         <div className={"difficulty-container"} onClick={getDifficulty}>

@@ -46,7 +46,6 @@ const Slider = ({stats, difficulties}) => {
 
     return (
 
-        Object.values(stats).length > 0 ?
         <div className="statistics-slider">
             <div className="btn-before" onClick={() => moveSlider('back')} ><span className="material-symbols-outlined">chevron_left</span></div>
             <div ref={statsContainer} className="statistics-slider-content">
@@ -55,10 +54,10 @@ const Slider = ({stats, difficulties}) => {
                         <div className="statsByDiff" key={index} data-index={index}>
                             <span className="title">{difficulties[stat[0] -1].name}</span>
                             <div className="statistics-content">
-                            {Object.entries(stat[1]).map(x => {
+                            {Object.entries(stat[1]).map((x, index) => {
                                 const word = x[0].replaceAll('_', ' ')
                                 return (
-                                        <div>
+                                        <div key={index}>
                                             <div className={'metric'}>{word}</div>
                                             <div className='value'>{Number(x[1]).toFixed(2)}</div>
                                         </div>
@@ -75,11 +74,10 @@ const Slider = ({stats, difficulties}) => {
                    return (
                        currPos === index ? <div className={"dot active"} key={index}></div> : <div className={"dot"} key={index}></div>
                    )
-
                 })
                 }
             </div>
-        </div> : <div style={{textAlign: "center"}}>You must be logged in to see further statistics!</div>
+        </div>
     )
 }
 
