@@ -513,8 +513,7 @@ body {
 
 .square {
   border: 0.1em solid var(--key-color);
-  width: 50px;
-  height: 50px;
+  width: min(10%, 50px);
   aspect-ratio: 1/1;
   //margin: 5% 1%;
   display: flex;
@@ -600,7 +599,7 @@ body {
   border-radius: 3px;
   padding: 1rem;
   margin: 0.5rem 0.5rem 5rem 0.5rem;
-  width: calc(33% - 1rem);
+  max-width: calc(33% - 1rem);
 }
 
 .difficulty:hover {
