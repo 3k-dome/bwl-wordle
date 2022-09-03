@@ -8,14 +8,14 @@ const Board = () => {
         return(
             //board container
             <div className={"raster"} ref={boardDiv}>
-                //row creation in dependency of difficulty
+                {/*row creation in dependency of difficulty*/}
                 {board.map((row, index) => {
                 return(
                     <div className="raster-row" key={index}>
-                        //square creation as placeholder for letters, in dependency of word length
+                        {/*square creation as placeholder for letters, in dependency of word length*/}
                         {row.map((square, index) => {
                                return(
-                                   //pass on letter and values for classes
+                                   // pass on letter and values for classes
                                 <Square letter={square.letter} key={index} active={square.active} color={square.color}/>
                                )
                           })}
