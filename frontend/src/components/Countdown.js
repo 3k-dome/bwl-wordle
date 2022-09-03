@@ -3,19 +3,25 @@ import React, { useEffect, useState } from "react";
 function Countdown({session, port}) {
     const [clockState, setClockState] = useState();
 
+    //remove not needed sub string from url
     const altPort = port.replace('/api','')
 
+
+    //function to clear whole app
     const reset = async () => {
-        const response = await fetch(altPort + '/debug/set_word')
+        await fetch(altPort + '/debug/set_word')
         localStorage.clear()
         window.location.reload(false);
     }
 
     useEffect(() => {
+        //function to create time diff of session interval and current time every second
         setInterval(() => {
+            //current time
             const date = new Date();
 
             if (session) {
+                //transform set session to calculate time diff
                 const refDate = new Date(session.replace('GMT', ''))
 
                 const timeDiffSec = Math.floor((refDate.getTime() - date.getTime()) / 10**3)
@@ -34,11 +40,11 @@ function Countdown({session, port}) {
 
                 const timeString = `${hourAsString}:${minAsString}:${secAsString}`
 
+                //call reset function when time is up
                 if (timeString === '00:00:00') {
 
                     reset()
 
-                    console.log('reload')
                 }
 
                 setClockState(timeString)
@@ -46,6 +52,7 @@ function Countdown({session, port}) {
         }, 1000);
     }, [session]);
 
+    //set clock color to orange when remaining time smaller than 10 minutes
     return <div className={`countdown {}`} style={clockState < "00:10:00" ? {color: 'var(--sqaure-orange)'}:null}>{clockState}</div>;
 }
 

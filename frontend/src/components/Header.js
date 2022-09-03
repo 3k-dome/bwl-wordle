@@ -1,20 +1,21 @@
 import React, {useRef, useEffect, useState} from "react";
 import Countdown from "./Countdown";
-import Login from "./Login";
 import Info from "./Info";
 
-const Header = ({session ,setKeyColor ,jwtToken, setJwtToken ,gameOver, gameOverModal, loggedIn, loginMsg, setLoggedIn, port, setLoginMsg, setDifficulty, leaderboard, displayLeaderboard, setDisplayLeaderboard}) => {
+const Header = ({session ,gameOver, gameOverModal, loggedIn, port, displayLeaderboard, setDisplayLeaderboard}) => {
 
     const changeBtn = useRef();
 
+    //function to change colors
     const changeColor = () => {
-
+        //iterate trough each element in color object and set styling variables to its values
         for (let property in colors) {
             document.documentElement.style.setProperty(property, colors[property][darkMode])
         }
         changeBtn.current.innerHTML = colors['img'][darkMode]
     }
 
+    //color object with all variables
     const colors =
                 {
             '--base-bg-color':
@@ -69,6 +70,7 @@ const Header = ({session ,setKeyColor ,jwtToken, setJwtToken ,gameOver, gameOver
 
     const hamburger = useRef()
 
+    //change in button display in dependency of leaderboard shown or not
     const changeLeaderboardDisplay = () => {
         setDisplayLeaderboard(!displayLeaderboard)
 
@@ -93,6 +95,7 @@ const Header = ({session ,setKeyColor ,jwtToken, setJwtToken ,gameOver, gameOver
         }
     }
 
+    //call color change function if darkMode state gets changed
     useEffect(changeColor, [darkMode])
 
 
@@ -105,6 +108,7 @@ const Header = ({session ,setKeyColor ,jwtToken, setJwtToken ,gameOver, gameOver
                     <div className={'line'}></div>
                 </div>
                 <div className="settings">
+                    {/*change darkMode state on click*/}
                     <div className="color-theme" ref={changeBtn} onClick={() => setDarkMode(!darkMode)}> </div>
                     {gameOver ?<div className="result" onClick={()=>gameOverModal.current.style.display = 'block'}><span className="material-symbols-outlined">leaderboard</span></div> : null}
                 </div>

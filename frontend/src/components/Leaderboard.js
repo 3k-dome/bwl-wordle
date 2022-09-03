@@ -1,9 +1,9 @@
-import React, {useContext, useRef} from "react";
-import {AppContext} from "../App";
+import React from "react";
 import Slider from "./Slider";
 
 const Leaderboard = ({leaderboard, displayLeaderboard, stats, difficulties, score,jwt}) => {
 
+    //show leaderboard only if a user is logged in
     if (jwt) {
         return (
             <div className={`leaderboard ${(displayLeaderboard) ? 'shown' : 'hidden'}`} ref={leaderboard}>

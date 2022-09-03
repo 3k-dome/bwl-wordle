@@ -25,6 +25,7 @@ const App = () => {
     const worldLengthUrl = `${port}/game/new_game`;
     const validateInputUrl = `${port}/game/validate_input`;
 
+    //used states
     const [board, setBoard] = useState([]);
 
     const [position, setPosition] = useState(0);
@@ -65,7 +66,7 @@ const App = () => {
 
 
 
-    //get length of todays word
+    //get length of today's word and defined session time for countdown
     useEffect(() => {
         async function getWordLength() {
             const response = await fetch(worldLengthUrl);
@@ -79,6 +80,7 @@ const App = () => {
     }, []);
 
 
+    //get available difficulties
     useEffect(() => {
         const getDiffUrl = port + '/game/difficulties'
 
@@ -104,12 +106,9 @@ const App = () => {
     useEffect( () => {
         if (!saveGame) {
 
-            console.log('new creation')
-            console.log(saveGame)
-
         async function createGame() {
-        // if (localStorage.getItem("jwt")) {
 
+            //if content in local storage exists retrieve information and build board
             if(localStorage.getItem("board")) {
                 setBoard(JSON.parse(localStorage.getItem("board")))
                 setDifficulty(JSON.parse(localStorage.getItem("difficulty")))
@@ -121,7 +120,6 @@ const App = () => {
                 } else {
                     setAttempt(JSON.parse(localStorage.getItem("attempt"))+1)
                 }
-            // }
         }else {
             //board size defined by difficulty and word length
             const boardSize = [difficulty, length];
@@ -145,7 +143,6 @@ const App = () => {
             setBoard(tempBoard);
             }
         }
-            // return tempBoard;
 
         createGame();
             console.log(board)
@@ -155,6 +152,7 @@ const App = () => {
         }
     }, [difficulty]);
 
+    //get user stats as soon as a user is logged in
     useEffect(  () => {
         if (jwtToken !== '') {
             async function getAndSetStats () {
@@ -166,7 +164,6 @@ const App = () => {
             }
             getAndSetStats()
         }
-
 
     }, [jwtToken])
 
@@ -198,7 +195,7 @@ const App = () => {
         return str.length === 1 && str.match(/[a-z]/i);
     };
 
-    //remove letter from current square
+    //remove letter from current square and move on back
     const delLetter = () => {
         if (!gameOver[0]) {
             if (currPosition >= 1) {
@@ -241,7 +238,7 @@ const App = () => {
         return word;
     };
 
-    //function which returns color in dependency on letter occurrence in todays word
+    //function which returns color in dependency on letter occurrence in today's word
     const colorMapping = (letterInformation, unique = true) => {
         if (!letterInformation.is_in_word) {
             return 'gray';
@@ -278,6 +275,7 @@ const App = () => {
         stats.max_tries = difficulty + 1
         stats.taken_tries = attempts + 1
 
+        //score object only needs amount of found letters
         const letterAtIndexArray = []
 
         for (let i = 0; i < board[0].length; i++) {
@@ -314,17 +312,15 @@ const App = () => {
             })
 
             const data = await response.json()
-            console.log(data)
             localStorage.setItem("score", JSON.stringify(data))
             setScore(data)
-            console.log(score)
         } catch (error) {
             console.log(error)
             setScore([])
         }
     }
 
-    //get score of logge in user
+    //get score of logged user
     const fetchCurrentScore = async () => {
         if (jwtToken) {
             const scoreSummaryUrl = port + '/score/summary'
@@ -346,17 +342,17 @@ const App = () => {
         }
     }
 
+    //put current game state to data base
     const putStateToDB = async() => {
         const state = {}
 
+        //local storage as information provider
         for (let i = 0; i < localStorage.length; i++){
             if (localStorage.key(i) !== 'jwt') {
                 state[localStorage.key(i)] = JSON.parse(localStorage.getItem(localStorage.key(i)))
             }
         }
-
-        console.log(state)
-
+        
         const body = JSON.stringify(state).replaceAll("\\", "")
 
         const stateToDbUrl = port+ '/state/save'
@@ -372,14 +368,10 @@ const App = () => {
                     body: body
                 })
                 const data = await response.json()
-
-                console.log(data.msg)
             }
         } catch (error) {
             console.log(error)
         }
-
-
     }
 
     //function which unites API call and color feedback
@@ -399,9 +391,8 @@ const App = () => {
                 const letterInformation = await apiResponse.letters;
 
                 const letterInformationArray = []
-
-                console.log(apiResponse)
-
+                
+                //case if right word was found
                 if (rightWord) {
                     let keyColors = {};
                     currBoard[currAttempt].forEach((letter, index) => {
@@ -416,14 +407,16 @@ const App = () => {
                     setKeyColor(newKeyColors);
                     setGameOver([true, true]);
 
+                    //put all information to local storage
                     localStorage.setItem("game-over", JSON.stringify([true, true]))
                     localStorage.setItem("board", JSON.stringify(currBoard))
                     localStorage.setItem("keyColor", JSON.stringify({ ...keyColor, ...keyColors }))
                     localStorage.setItem("attempt", JSON.stringify(currAttempt))
 
-
+                    //add score from created score object
                     await addScore(createScoreObject(difficulty, currAttempt, currBoard))
 
+                    //get new score and metrics
                     const currStats = await fetchCurrentScore()
 
                     setStats(currStats)
@@ -433,10 +426,13 @@ const App = () => {
                     return;
                 }
 
+                //in case the input was valid but not the exact word
                 if (validInput) {
-                    let multipleLetter = [];
+                    //array for color correction
+                    let validLetters = [];
                     let keyColors = {};
 
+                    //get and set board and key color for each letter
                     currBoard[currAttempt].forEach((letter, index) => {
                             letter.color = colorMapping(
                                 letterInformation[index]
@@ -444,23 +440,32 @@ const App = () => {
 
                             keyColors[letter.letter] = colorOverride(keyColor[letter.letter], letter.color);
 
+                            //add additional information for color correction
                             letter.index = index
                             letter.count = letterInformation[index].count
-                            multipleLetter.push(letter);
+                            validLetters.push(letter);
                     });
 
-                    multipleLetter = multipleLetter.filter(letter => letter.color !== 'gray')
+                    //reduce array to only valid letters
+                    validLetters = validLetters.filter(letter => letter.color !== 'gray')
 
-                    const allLetters = multipleLetter.map(letter => {
+                    //reference array with only letter property
+                    const allLetters = validLetters.map(letter => {
                         return letter.letter
                     })
 
+                    //each letter is only needed once
                     const uniqueLetters = [...new Set(allLetters)]
 
+                    //do color correction for each unique letter
                     uniqueLetters.forEach(unique => {
-                        const uniqueLetterArray = multipleLetter.filter(letter => letter.letter === unique)
+                        //get all letter objects where the actual letter equals the current one in the unique array
+                        const uniqueLetterArray = validLetters.filter(letter => letter.letter === unique)
 
+                        //sort them after their color property
                         uniqueLetterArray.sort((a, b) => a.color.localeCompare(b.color));
+
+                        //iterate through them to change color in dependency of letter frequency
                         uniqueLetterArray.forEach((letter, index) => {
                             if (uniqueLetterArray.length > letter.count) {
                                 if (index <= letter.count -1) {
@@ -476,8 +481,8 @@ const App = () => {
 
                     const newKeyColors = { ...keyColor, ...keyColors }
 
+                    //jump to next tries if some are left
                     if (currAttempt < difficulty) {
-
                         currBoard[currAttempt + 1][0].active = "active";
                         setAttempt(currAttempt + 1);
                         notInitialRender.current = true;
@@ -503,6 +508,7 @@ const App = () => {
                     await putStateToDB()
 
                 } else {
+                    //show little animation when input is invalid
                     boardDiv.current.children[currAttempt].classList.toggle('invalid')
                     setTimeout(() => {
                         boardDiv.current.children[currAttempt].classList.toggle('invalid')
@@ -525,6 +531,7 @@ const App = () => {
         }
     });
 
+    //add keyboard events to app
     useEffect(() => {
         document.addEventListener("keydown", handleKeyboard);
         return () => {
@@ -534,7 +541,7 @@ const App = () => {
 
     const gameOverModal = useRef();
 
-    //page presentation in dependency on current states (difficulty set?, game over?)
+    //page presentation in dependency on current states (already logged in?, difficulty set?, game over?)
     if (!loggedIn) {
         return (
             <>

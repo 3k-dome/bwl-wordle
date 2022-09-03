@@ -6,6 +6,7 @@ const Info = () => {
 
     const [display, setDisplay] = useState(false)
 
+    //function to show info module
     const moveInfoModule = () => {
         const infoModule = info.current
 
