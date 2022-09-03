@@ -1,10 +1,10 @@
-import React, {useContext, useEffect, useRef} from "react";
+import React, {useContext} from "react";
 import Key from "./Key";
 import {AppContext} from "../App";
 
 const Keyboard = () => {
 
-    const {handleKeyboard, delLetter, submitTry, board, attempt, notInitialRender, keyBoardDiv} = useContext(AppContext)
+    const {handleKeyboard, delLetter, submitTry, keyBoardDiv} = useContext(AppContext)
 
 
 

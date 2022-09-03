@@ -1,5 +1,4 @@
-import React, {useRef, useState, useEffect} from "react";
-import {AppContext} from "../App";
+import React, {useRef, useEffect} from "react";
 
 const Login = ({setSaveGame ,setGameOver ,setBoard ,setAttempt ,setKeyColor ,jwtToken, setJwtToken ,port, loggedIn, setLoggedIn, loginMsg, setLoginMsg, setDifficulty, setScore}) => {
 
@@ -10,13 +9,10 @@ const Login = ({setSaveGame ,setGameOver ,setBoard ,setAttempt ,setKeyColor ,jwt
     const loginUrl = `${port}/auth/login`
     const logoutUrl = `${port}/auth/logout`
 
-    // const [registerMsg, setRegisterMsg] = useState('')
-
-
+    //function to change states in terms that app knows user is logged in
     const login = async (e) => {
         e.preventDefault()
         const [response, status] = await loginFetch(username.current.value, password.current.value)
-        console.log(response)
 
         if (Number(status) === 400) {
             const responseMsg = response.msg
@@ -28,6 +24,7 @@ const Login = ({setSaveGame ,setGameOver ,setBoard ,setAttempt ,setKeyColor ,jwt
         }
     }
 
+    //check if save game is available
     const checkForState = async () => {
         if (jwtToken !== '') {
             try {
@@ -50,6 +47,7 @@ const Login = ({setSaveGame ,setGameOver ,setBoard ,setAttempt ,setKeyColor ,jwt
         }
     }
 
+    //if logged in get game state and store jwt local
     useEffect(() => {
         const storeJWT = () => {
             localStorage.setItem('jwt', JSON.stringify(jwtToken))
@@ -87,6 +85,7 @@ const Login = ({setSaveGame ,setGameOver ,setBoard ,setAttempt ,setKeyColor ,jwt
         setSate()
     }, [jwtToken])
 
+    //function to register new user
     const register = async (e) => {
         e.preventDefault()
         const [response, status] = await registerFetch(username.current.value, password.current.value)
@@ -100,6 +99,7 @@ const Login = ({setSaveGame ,setGameOver ,setBoard ,setAttempt ,setKeyColor ,jwt
 
     }
 
+    //register API call
     const registerFetch = async (username, password) => {
         try{
             const response = await fetch(registerUrl, {
@@ -123,6 +123,7 @@ const Login = ({setSaveGame ,setGameOver ,setBoard ,setAttempt ,setKeyColor ,jwt
         }
     }
 
+    //login API call
     const loginFetch = async (username, password) => {
         try {
             const response = await fetch(loginUrl, {
@@ -147,12 +148,12 @@ const Login = ({setSaveGame ,setGameOver ,setBoard ,setAttempt ,setKeyColor ,jwt
         }
     }
 
+    //function to tell app that user is logged out
     const logout = async (e) => {
         e.preventDefault()
 
         if (loginMsg !== 'Guest') {
             const response = await logoutFetch(JSON.parse(localStorage.getItem('jwt')))
-            console.log(response)
         }
 
         localStorage.clear()
@@ -160,6 +161,7 @@ const Login = ({setSaveGame ,setGameOver ,setBoard ,setAttempt ,setKeyColor ,jwt
         window.location.reload(false);
     }
 
+    //logout API call
     const logoutFetch = async (token) => {
         try {
             const response = await fetch(logoutUrl, {
@@ -178,6 +180,7 @@ const Login = ({setSaveGame ,setGameOver ,setBoard ,setAttempt ,setKeyColor ,jwt
         }
     }
 
+    //tell app a guest is logged in
     const guest = () => {
         setLoggedIn(!loggedIn)
         setLoginMsg(`Guest`)

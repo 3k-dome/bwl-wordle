@@ -1,12 +1,13 @@
-import React, {useState, useEffect} from "react";
-import {AppContext} from "../App";
+import React from "react";
 
-const GameOver = ({attempts, won, gameOverModal, score, difficulties, stats}) => {
+const GameOver = ({attempts, won, gameOverModal, score}) => {
 
     return (
         <div className={'gameOver'} ref={gameOverModal}>
+            {/*close button for game over modal*/}
             <span className="material-symbols-outlined" onClick={(e) => e.target.parentElement.style.display = 'none'}>close</span>
             {won ? <p>Congrats! You found the word!</p> : <p>You didn't got today's word. More luck next time!</p>}
+            {/*if score is available -> user logged in, show additional information*/}
             {!score.msg && score.score > 0 ?
                 <>
                     <p>You needed <span className={'strong'}>{attempts} </span> attempt(s)</p>
