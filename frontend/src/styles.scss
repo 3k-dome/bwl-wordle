@@ -241,9 +241,9 @@ body {
 
   @media only screen and (min-width: 769px) {
     height: 90%;
-    left: -40%;
+    left: -25%;
     top: 10%;
-    width: 40%;
+    width: 25%;
 
   }
 
@@ -279,7 +279,7 @@ body {
     .leaderboard-content-scoreToday {
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: space-evenly;
       height: 20%;
 
       span {
@@ -289,16 +289,15 @@ body {
         width: 81%;
         display: block;
         margin: 0 auto;
-        background-color: var(--key-color);
+        background-color: var(--sqaure-green);
         border-radius: 2px;
         text-align: center;
-        font-style: italic;
       }
 
       .scoreToday-score {
         display: block;
         margin: 0 auto;
-        font-size: 150%;
+        font-size: 175%;
         font-weight: bold;
       }
     }
@@ -358,43 +357,57 @@ body {
               font-size: 150%;
               width: 100%;
               font-weight: bold;
-              background-color: var(--key-color);
+              background-color: var(--sqaure-green);
               border-radius: 2px;
             }
 
             .statistics-content {
               display: flex;
-              flex-direction: column;
-              justify-content: space-around;
+              flex-direction: row;
+              justify-content: space-evenly;
+              flex-wrap: wrap;
               align-items: center;
               height: 100%;
               width: 100%;
+              gap: 2%;
 
-              div {
-                width: 100%;
-                height: fit-content;
+              .content-container {
+                width: 40%;
+                height: 18%;
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
                 font-size: 90%;
+                background-color: var(--key-color);
+                border-radius: 2px;
 
                 .metric, .value {
-                  text-align: center;
                   height: 40%;
-                  border-radius: 3px;
                   margin: 2px;
+                  border-radius: 2px;
                 }
 
                 .metric {
-                  background-color: var(--border-color);
-                  width: 80%;
-                  font-style: italic;
+                  width: fit-content;
+                  font-weight: bold;
+                  height: 25%;
+                  font-size: 90%;
+                  text-align: center;
+                  display: flex;
+                  align-items: center;
+                  padding: 0 2%;
                 }
 
                 .value {
-                  background-color: var(--square-gray);
-                  width: 30%;
+                  width: 80%;
+                  text-align: center;
+                  font-size: 150%;
+                  font-weight: bold;
+                  background-color: var(--sqaure-green);
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
                 }
               }
             }
@@ -412,7 +425,7 @@ body {
 
           }
           @media only screen and (min-width: 769px) {
-            bottom: 5px;
+            bottom: 0px;
             height: 5%;
 
           }
@@ -431,7 +444,7 @@ body {
 
             &.active {
               background-color: var(--text-color);
-              transform: scale(1.5);
+              transform: scale(1.25);
             }
           }
         }
@@ -662,7 +675,7 @@ body {
   height: 50%;
   margin: 1%;
   background-color: var(--border-color);
-  border-radius: 5px;
+  border-radius: 2px;
 
 
   input {
@@ -671,27 +684,34 @@ body {
     color: var(--text-color);
     padding: 5%;
     border: none;
-    border-radius: 5px;
+    border-radius: 2px;
     background: transparent;
     z-index: 1;
+    box-sizing: border-box;
 
 
 
     &:-webkit-autofill {
-      -webkit-text-fill-color: transparent!important;
+      -webkit-text-fill-color: var(--text-color);
+      -webkit-box-shadow: 0 0 0 30px var(--border-color) inset !important;
+      border: none;
 
-        &:valid {
+          + label{
+          transform: translateX(-5%);
+          transform: translateY(-100%);
+          font-size: 70%;
+          outline: none;
+          border: none;
         }
 
     }
 
     &:focus, &:valid {
-      border-bottom: 3px solid var(--sqaure-green);
+      border-bottom: 1px solid var(--sqaure-green);
       outline: none;
     }
 
     &:focus + label, &:valid + label {
-      transform: translateX(-5%);
       transform: translateY(-100%);
       font-size: 70%;
       outline: none;

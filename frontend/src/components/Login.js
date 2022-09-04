@@ -1,4 +1,5 @@
 import React, {useRef, useEffect} from "react";
+import gameOver from "./GameOver";
 
 const Login = ({setSaveGame ,setGameOver ,setBoard ,setAttempt ,setKeyColor ,jwtToken, setJwtToken ,port, loggedIn, setLoggedIn, loginMsg, setLoginMsg, setDifficulty, setScore}) => {
 
@@ -92,7 +93,7 @@ const Login = ({setSaveGame ,setGameOver ,setBoard ,setAttempt ,setKeyColor ,jwt
         if (Number(status) === 400) {
             const responseMsg = response.msg
             setLoginMsg(responseMsg)
-        } else if (Number(status) === 200) {
+        } else if (Number(status) === 201) {
             setLoginMsg(`User successfully registered!`)
         }
 
