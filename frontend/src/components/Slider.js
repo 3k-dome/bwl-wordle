@@ -62,9 +62,9 @@ const Slider = ({stats, difficulties}) => {
                             {Object.entries(stat[1]).map((x, index) => {
                                 const word = x[0].replaceAll('_', ' ')
                                 return (
-                                        <div key={index}>
+                                        <div key={index} className={'content-container'}>
                                             <div className={'metric'}>{word}</div>
-                                            <div className='value'>{Number(x[1]).toFixed(2)}</div>
+                                            <div className='value'>{String(x[1]).split('.')[1] ? Number(x[1]).toFixed(2) : x[1]}</div>
                                         </div>
                                 )
                             })}

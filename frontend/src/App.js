@@ -90,8 +90,6 @@ const App = () => {
                 const response = await fetch(getDiffUrl);
                 const data = await response.json()
 
-                console.log(data)
-
                 setDiffs(data)
             } catch (error) {
                 console.log(error)
@@ -145,10 +143,9 @@ const App = () => {
         }
 
         createGame();
-            console.log(board)
 
         } else {
-            console.log('loaded')
+            console.log('save game loaded')
         }
     }, [difficulty]);
 
@@ -158,9 +155,6 @@ const App = () => {
             async function getAndSetStats () {
                 const currStats = await fetchCurrentScore()
                 setStats(currStats)
-
-                console.log(currStats)
-
             }
             getAndSetStats()
         }
@@ -291,8 +285,6 @@ const App = () => {
         }
 
         stats.found_letters = letterAtIndexArray.filter(letter => letter === true).length
-
-        console.log(stats)
 
         return stats
     }
