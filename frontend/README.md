@@ -1,3 +1,9 @@
+- Node and npm is required (https://nodejs.org/en/ & https://www.npmjs.com/)
+- in project_root/frontend open cmd
+```
+npm install
+```
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
