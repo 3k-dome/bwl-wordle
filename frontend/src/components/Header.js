@@ -2,7 +2,7 @@ import React, {useRef, useEffect, useState} from "react";
 import Countdown from "./Countdown";
 import Info from "./Info";
 
-const Header = ({session ,gameOver, gameOverModal, loggedIn, port, displayLeaderboard, setDisplayLeaderboard}) => {
+const Header = ({session ,gameOver, gameOverModal, loggedIn, port, displayLeaderboard, setDisplayLeaderboard, reset}) => {
 
     const changeBtn = useRef();
 
@@ -113,7 +113,7 @@ const Header = ({session ,gameOver, gameOverModal, loggedIn, port, displayLeader
                     {gameOver ?<div className="result" onClick={()=>gameOverModal.current.style.display = 'block'}><span className="material-symbols-outlined">leaderboard</span></div> : null}
                 </div>
                 <div className={'title'}>BWORDLE</div>
-                <Countdown session={session} port={port}/>
+                <Countdown session={session} reset={reset} port={port}/>
             </div>
         )
 }

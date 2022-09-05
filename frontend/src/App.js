@@ -64,6 +64,12 @@ const App = () => {
 
     const leaderboard = useRef()
 
+    //function to clear whole app
+    const reset = () => {
+        localStorage.clear()
+        window.location.reload(false);
+    }
+
 
 
     //get length of today's word and defined session time for countdown
@@ -74,7 +80,20 @@ const App = () => {
 
             setLength((await data.length) - 1);
 
-            setSession({'start': await data.session_start, 'end': await data.session_end})
+            const currSession = {'start': await data.session_start, 'end': await data.session_end}
+
+            setSession(currSession)
+
+            const storedSession = JSON.parse(localStorage.getItem('session'))
+
+            if (currSession.start !== storedSession.start && storedSession) {
+                console.log('here?')
+                console.log(storedSession)
+                reset()
+            } else {
+                localStorage.setItem('session', JSON.stringify(currSession))
+            }
+
         }
         getWordLength()
     }, []);
@@ -537,14 +556,14 @@ const App = () => {
     if (!loggedIn) {
         return (
             <>
-                <Header session={session} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} leaderboard={leaderboard} displayLeaderboard={displayLeaderboard} setDisplayLeaderboard={setDisplayLeaderboard}/>
+                <Header reset={reset} session={session} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} leaderboard={leaderboard} displayLeaderboard={displayLeaderboard} setDisplayLeaderboard={setDisplayLeaderboard}/>
                 <Login  setSaveGame={setSaveGame} setGameOver={setGameOver} setBoard={setBoard} setScore={setScore} jwtToken={jwtToken} setJwtToken={setJwtToken} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
             </>
         );
     } else if (!difficulty) {
         return (
             <>
-                <Header session={session} gameOver={gameOver[0]} gameOverModal={gameOverModal} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} leaderboard={leaderboard} displayLeaderboard={displayLeaderboard} setDisplayLeaderboard={setDisplayLeaderboard}/>
+                <Header reset={reset} session={session} gameOver={gameOver[0]} gameOverModal={gameOverModal} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} leaderboard={leaderboard} displayLeaderboard={displayLeaderboard} setDisplayLeaderboard={setDisplayLeaderboard}/>
                 <div className="user">
                     <div style={{display: loggedIn? 'block' : 'none'}}>
                         <Login setSaveGame={setSaveGame} setGameOver={setGameOver} setBoard={setBoard} setAttempt={setAttempt} setScore={setScore} setKeyColor={setKeyColor} jwtToken={jwtToken} setJwtToken={setJwtToken} setDifficulty={setDifficulty}  loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
@@ -558,7 +577,7 @@ const App = () => {
     } else {
         return (
             <>
-                <Header session={session} gameOver={gameOver[0]} gameOverModal={gameOverModal} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} leaderboard={leaderboard} displayLeaderboard={displayLeaderboard} setDisplayLeaderboard={setDisplayLeaderboard}/>
+                <Header reset={reset} session={session} gameOver={gameOver[0]} gameOverModal={gameOverModal} loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn} leaderboard={leaderboard} displayLeaderboard={displayLeaderboard} setDisplayLeaderboard={setDisplayLeaderboard}/>
                 <div className="user">
                     <div style={{display: loggedIn? 'block' : 'none'}}>
                         <Login setSaveGame={setSaveGame} setGameOver={setGameOver} setBoard={setBoard} setAttempt={setAttempt} setScore={setScore} setKeyColor={setKeyColor} jwtToken={jwtToken} setJwtToken={setJwtToken} setDifficulty={setDifficulty}  loginMsg={loginMsg} setLoginMsg={setLoginMsg} port={port} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
