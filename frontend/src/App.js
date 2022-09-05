@@ -87,8 +87,6 @@ const App = () => {
             const storedSession = JSON.parse(localStorage.getItem('session'))
 
             if (currSession.start !== storedSession.start && storedSession) {
-                console.log('here?')
-                console.log(storedSession)
                 reset()
             } else {
                 localStorage.setItem('session', JSON.stringify(currSession))
