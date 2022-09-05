@@ -1,6 +1,4 @@
-### 27.07. Moved some stuff
-* backend: https://github.com/3k-dome/bwl-wordle-backend
-* scraper: https://github.com/3k-dome/bwl-wordle-web-scraper
+
 
 # bwl-wordle
 Wordle but with business related terms. University project 2022.
@@ -30,22 +28,15 @@ Wordle but with business related terms. University project 2022.
 2. captures user input and transfers it to backend
 3. displays game and communication with client
 
+## run
 
-## install
+download the latest release to your right and run ```bwl-wordle-backend.exe```.
 
-### backend
+## install (source)
 
-in project root (backend, frontend, readme, ...) open cmd.
-```
-python -m venv venv
-./venv/Scripts/Activate.ps1
-python -m pip install -r requirements.txt
-```
+### backend and scraper
 
+Both parts were moved into thier onw reposity see below. The source code in this repository is outdated.
 
-### frontend
-- Node and npm is required (https://nodejs.org/en/ & https://www.npmjs.com/)
-- in project_root/frontend open cmd
-```
-npm install
-```
+* backend: https://github.com/3k-dome/bwl-wordle-backend
+* scraper: https://github.com/3k-dome/bwl-wordle-web-scraper
