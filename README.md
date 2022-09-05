@@ -30,10 +30,13 @@ Wordle but with business related terms. University project 2022.
 
 ## run
 
-download the newest release and run ```bwl-wordle-backend.exe```.
+download the latest release to your right and run ```bwl-wordle-backend.exe```.
 
-## install
+## install (source)
 
-### backend and scraper code is outdated see
+### backend and scraper
+
+Both parts were moved into thier onw reposity see below. The source code in this repository is outdated.
+
 * backend: https://github.com/3k-dome/bwl-wordle-backend
 * scraper: https://github.com/3k-dome/bwl-wordle-web-scraper
