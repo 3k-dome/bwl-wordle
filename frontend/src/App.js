@@ -19,7 +19,7 @@ export const AppContext = createContext();
 
 const App = () => {
     //backend server port
-    const port = "http://192.168.0.11:8000/api";
+    const port = "/api";
 
     //urls for api calls
     const worldLengthUrl = `${port}/game/new_game`;
@@ -54,7 +54,7 @@ const App = () => {
 
     const [score, setScore] = useState({})
 
-    const [session, setSession] = useState()
+    const [session, setSession] = useState({})
 
     const [saveGame, setSaveGame] = useState()
 
@@ -74,7 +74,7 @@ const App = () => {
 
             setLength((await data.length) - 1);
 
-            setSession(await data.session_end)
+            setSession({'start': await data.session_start, 'end': await data.session_end})
         }
         getWordLength()
     }, []);
