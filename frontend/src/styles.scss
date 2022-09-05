@@ -174,63 +174,6 @@ body {
   }
 }
 
-@media only screen and (min-width: 769px) {
-  @keyframes openLeaderboard {
-    0% {
-      transform: translateX(-100%);
-      opacity: 0
-    }
-    100% {
-      transform: translateX(100%);
-      opacity: 1;
-      visibility: visible
-    }
-  }
-
-  @keyframes closeLeaderboard {
-    0% {
-      transform: translateX(100%);
-      opacity: 1;
-      visibility: visible;
-    }
-    100% {
-      transform: translateX(-100%);
-      opacity: 0;
-      visibility: hidden;
-    }
-  }
-}
-
-@media only screen and (max-width: 768px) {
-  @keyframes openLeaderboard {
-    0% {
-      height: 0;
-      opacity: 0;
-      visibility: hidden;
-    }
-    100% {
-      height: 60%;
-      opacity: 1;
-      visibility: visible;
-    }
-  }
-
-  @keyframes closeLeaderboard {
-    0% {
-      height: 60%;
-      opacity: 1;
-      visibility: visible;
-    }
-    100% {
-      height: 0;
-      opacity: 0;
-      visibility: hidden;
-    }
-  }
-}
-
-
-
 .leaderboard {
 
   @media only screen and (max-width: 768px) {
@@ -247,18 +190,33 @@ body {
 
   }
 
-  visibility: hidden;
   position: absolute;
   z-index: 101;
   overflow: hidden;
   background-color: var(--base-bg-color);
+  transition: all ease-in-out 0.5s;
+
 
   &.hidden {
-    animation: closeLeaderboard ease-in-out 0.25s forwards;
+    
+    @media only screen and (max-width: 768px) {
+      height: 0;
+
+    }
+
+    @media only screen and (min-width: 769px) {
+      transform: translateX(-100%);
+    }
   }
 
   &.shown {
-    animation: openLeaderboard ease-in-out 0.25s forwards;
+    @media only screen and (max-width: 768px) {
+      height: 60%;
+    }
+
+    @media only screen and (min-width: 769px) {
+      transform: translateX(100%);
+    }
   }
 
   .leaderboard-content {
@@ -267,7 +225,6 @@ body {
     flex-direction: column;
     justify-content: start;
     height: 100%;
-    //background-color: var(--border-color);
 
     > div {
       border: 1px solid var(--border-color);

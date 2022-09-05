@@ -6,7 +6,6 @@ function Countdown({session, port}) {
     //remove not needed sub string from url
     const altPort = port.replace('/api','')
 
-
     //function to clear whole app
     const reset = async () => {
         await fetch(altPort + '/debug/set_word')
@@ -14,16 +13,35 @@ function Countdown({session, port}) {
         window.location.reload(false);
     }
 
+    //reset when session changed
+    useEffect(() => {
+        const storedSession = JSON.parse(localStorage.getItem('session'))
+
+        if (storedSession && session) {
+            if (storedSession !== session) {
+                reset()
+            }
+        }
+    }, [session])
+
     useEffect(() => {
         //function to create time diff of session interval and current time every second
         setInterval(() => {
             //current time
             const date = new Date();
 
-            if (session) {
-                //transform set session to calculate time diff
-                const refDate = new Date(session.replace('GMT', ''))
+            if (session.end) {
 
+                localStorage.setItem('session', JSON.stringify(session))
+                //transform set session to calculate time diff
+                const refDate = new Date(session.end.replace('GMT', ''))
+
+                //call reset function when time is up
+                if (date.getTime() >= refDate.getTime()) {
+
+                    reset()
+
+                }
                 const timeDiffSec = Math.floor((refDate.getTime() - date.getTime()) / 10**3)
 
                 const totalDiffMin = Math.floor(timeDiffSec /60)
@@ -42,9 +60,7 @@ function Countdown({session, port}) {
 
                 //call reset function when time is up
                 if (timeString === '00:00:00') {
-
                     reset()
-
                 }
 
                 setClockState(timeString)
