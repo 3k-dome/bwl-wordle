@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from "react";
 
-function Countdown({session, port}) {
+function Countdown({session}) {
     const [clockState, setClockState] = useState();
-
-    //remove not needed sub string from url
-    const altPort = port.replace('/api','')
 
     //function to clear whole app
     const reset = async () => {
-        await fetch(altPort + '/debug/set_word')
         localStorage.clear()
         window.location.reload(false);
     }
